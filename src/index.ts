@@ -1,15 +1,32 @@
-const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+import express, { Request, Response } from 'express'; // Importar Request e Response do 'express'
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 app.use(express.json());
 
 // Armazenamento em memória
-let todos = [];
-let weatherCache = new Map();
+// Adicionar tipagem explícita para 'todos'
+interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  priority: 'high' | 'medium' | 'low'; // Exemplo de prioridades possíveis
+  createdAt: string;
+}
+let todos: Todo[] = []; // Explicitamente tipado como um array de objetos Todo
+
+// Usar Map com tipos explícitos para weatherCache
+interface WeatherData {
+  location: string;
+  temperature: number;
+  description: string;
+  humidity: number;
+  timestamp: string;
+}
+let weatherCache = new Map<string, WeatherData>(); // Explicitamente tipado
 
 // Página inicial
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => { // Tipar req e res
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -18,10 +35,10 @@ app.get('/', (req, res) => {
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
-        body { 
+        body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          max-width: 1200px; 
-          margin: 0 auto; 
+          max-width: 1200px;
+          margin: 0 auto;
           padding: 20px;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
@@ -43,9 +60,9 @@ app.get('/', (req, res) => {
         }
         .tool-name { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; }
         .tool-desc { opacity: 0.9; }
-        .status { 
-          text-align: center; 
-          padding: 20px; 
+        .status {
+          text-align: center;
+          padding: 20px;
           background: rgba(0, 212, 170, 0.2);
           border-radius: 10px;
           margin-bottom: 30px;
@@ -66,10 +83,10 @@ app.get('/', (req, res) => {
           margin: 5px;
         }
         button:hover { background: #00b894; }
-        #result { 
-          background: rgba(255, 255, 255, 0.1); 
-          padding: 15px; 
-          border-radius: 5px; 
+        #result {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 15px;
+          border-radius: 5px;
           margin-top: 10px;
           font-family: monospace;
         }
@@ -83,34 +100,34 @@ app.get('/', (req, res) => {
           <p>Port: ${process.env.PORT || 3000} | Tarefas: ${todos.length} | Cache: ${weatherCache.size} itens</p>
           <p>Deployed: ${new Date().toLocaleString()}</p>
         </div>
-        
+
         <h2>🛠️ Ferramentas Funcionais</h2>
-        
+
         <div class="tool-card">
           <div class="tool-name">🔄 Gerador de UUID</div>
           <div class="tool-desc">Gera identificadores únicos universais</div>
         </div>
-        
+
         <div class="tool-card">
           <div class="tool-name">📝 Gerenciador de Tarefas</div>
           <div class="tool-desc">Sistema completo de TODOs com CRUD</div>
         </div>
-        
+
         <div class="tool-card">
           <div class="tool-name">🧮 Calculadora Avançada</div>
           <div class="tool-desc">Operações matemáticas: +, -, *, /, ^, √, !</div>
         </div>
-        
+
         <div class="tool-card">
           <div class="tool-name">🌤️ Simulador de Clima</div>
           <div class="tool-desc">Dados meteorológicos simulados com cache</div>
         </div>
-        
+
         <div class="tool-card">
           <div class="tool-name">📱 Gerador de QR Code</div>
           <div class="tool-desc">Códigos QR para textos e URLs</div>
         </div>
-        
+
         <div class="tool-card">
           <div class="tool-name">✅ Validador de Dados</div>
           <div class="tool-desc">Valida emails, URLs, JSON, UUIDs, telefones</div>
@@ -163,7 +180,7 @@ app.get('/', (req, res) => {
 });
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => { // Tipar req e res
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -176,19 +193,22 @@ app.get('/health', (req, res) => {
 });
 
 // API: Gerador de UUID
-app.post('/api/uuid', (req, res) => {
-  const count = Math.min(req.body.count || 1, 10);
-  const format = req.body.format || 'simple';
-  const uuids = Array.from({ length: count }, () => {
+app.post('/api/uuid', (req: Request, res: Response) => { // Tipar req e res
+  // Coerção de tipo para req.body para garantir acesso seguro às propriedades
+  const { count, format } = req.body as { count?: number; format?: string };
+  const numCount = Math.min(count || 1, 10);
+  const selectedFormat = format || 'simple';
+  const uuids = Array.from({ length: numCount }, () => {
     const uuid = uuidv4();
-    return format === 'formatted' ? `UUID: ${uuid}` : uuid;
+    return selectedFormat === 'formatted' ? `UUID: ${uuid}` : uuid;
   });
-  res.json({ uuids, count, format });
+  res.json({ uuids, count: numCount, format: selectedFormat });
 });
 
 // API: Calculadora
-app.post('/api/calculator', (req, res) => {
-  const { operation, a, b } = req.body;
+app.post('/api/calculator', (req: Request, res: Response) => { // Tipar req e res
+  // Coerção de tipo para req.body
+  const { operation, a, b } = req.body as { operation: string; a: number; b?: number };
   let result;
 
   try {
@@ -203,7 +223,7 @@ app.post('/api/calculator', (req, res) => {
         result = a * (b || 1);
         break;
       case 'divide':
-        if (!b || b === 0) throw new Error('Divisão por zero');
+        if (b === undefined || b === 0) throw new Error('Divisão por zero');
         result = a / b;
         break;
       case 'power':
@@ -215,76 +235,87 @@ app.post('/api/calculator', (req, res) => {
         break;
       case 'factorial':
         if (a < 0 || !Number.isInteger(a)) throw new Error('Fatorial inválido');
+        // Validar 'a' para garantir que é um número
+        if (typeof a !== 'number') throw new Error('O argumento "a" deve ser um número para fatorial.');
         result = Array.from({ length: a }, (_, i) => i + 1).reduce((acc, n) => acc * n, 1);
         break;
       default:
         throw new Error('Operação não suportada');
     }
     res.json({ operation, a, b, result });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (error: unknown) { // Tipar 'error' como 'unknown' e fazer verificação
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Um erro desconhecido ocorreu.' });
+    }
   }
 });
 
 // API: Gerenciador de TODOs
-app.get('/api/todos', (req, res) => {
+app.get('/api/todos', (req: Request, res: Response) => { // Tipar req e res
   res.json(todos);
 });
 
-app.post('/api/todos', (req, res) => {
-  const todo = {
+app.post('/api/todos', (req: Request, res: Response) => { // Tipar req e res
+  const { text, priority } = req.body as { text?: string; priority?: 'high' | 'medium' | 'low' };
+  const todo: Todo = { // Explicitamente tipado
     id: uuidv4(),
-    text: req.body.text || 'Nova tarefa',
+    text: text || 'Nova tarefa',
     completed: false,
-    priority: req.body.priority || 'medium',
+    priority: priority || 'medium',
     createdAt: new Date().toISOString()
   };
   todos.push(todo);
   res.json(todo);
 });
 
-app.put('/api/todos/:id', (req, res) => {
+app.put('/api/todos/:id', (req: Request, res: Response) => { // Tipar req e res
   const todo = todos.find(t => t.id === req.params.id);
   if (!todo) return res.status(404).json({ error: 'Tarefa não encontrada' });
-  
-  if (req.body.completed !== undefined) todo.completed = req.body.completed;
-  if (req.body.text) todo.text = req.body.text;
-  if (req.body.priority) todo.priority = req.body.priority;
-  
+
+  // Coerção de tipo para req.body
+  const { completed, text, priority } = req.body as { completed?: boolean; text?: string; priority?: 'high' | 'medium' | 'low' };
+
+  if (completed !== undefined) todo.completed = completed;
+  if (text) todo.text = text;
+  if (priority) todo.priority = priority;
+
   res.json(todo);
 });
 
-app.delete('/api/todos/:id', (req, res) => {
+app.delete('/api/todos/:id', (req: Request, res: Response) => { // Tipar req e res
   const index = todos.findIndex(t => t.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
-  
+
   const deleted = todos.splice(index, 1)[0];
   res.json(deleted);
 });
 
 // API: Simulador de Clima
-app.post('/api/weather', (req, res) => {
-  const location = req.body.location || 'Unknown';
-  
-  if (weatherCache.has(location)) {
-    return res.json(weatherCache.get(location));
+app.post('/api/weather', (req: Request, res: Response) => { // Tipar req e res
+  const { location } = req.body as { location?: string };
+  const selectedLocation = location || 'Unknown';
+
+  if (weatherCache.has(selectedLocation)) {
+    return res.json(weatherCache.get(selectedLocation));
   }
 
-  const weather = {
-    location,
+  const weather: WeatherData = { // Explicitamente tipado
+    location: selectedLocation,
     temperature: Math.round((Math.random() * 40) - 10),
     description: ['Ensolarado', 'Nublado', 'Chuvoso', 'Tempestuoso', 'Parcialmente nublado'][Math.floor(Math.random() * 5)],
     humidity: Math.round(Math.random() * 100),
     timestamp: new Date().toISOString()
   };
 
-  weatherCache.set(location, weather);
+  weatherCache.set(selectedLocation, weather);
   res.json(weather);
 });
 
 // API: Validador de Dados
-app.post('/api/validator', (req, res) => {
-  const { data, type } = req.body;
+app.post('/api/validator', (req: Request, res: Response) => { // Tipar req e res
+  const { data, type } = req.body as { data: string; type: string };
   let isValid = false;
   let message = '';
 
@@ -311,9 +342,13 @@ app.post('/api/validator', (req, res) => {
       default:
         throw new Error('Tipo não suportado');
     }
-  } catch (error) {
+  } catch (error: unknown) { // Tipar 'error' como 'unknown' e fazer verificação
     isValid = false;
-    message = error.message;
+    if (error instanceof Error) {
+      message = error.message;
+    } else {
+      message = 'Erro desconhecido na validação.';
+    }
   }
 
   res.json({ data, type, isValid, message });
