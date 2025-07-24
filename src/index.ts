@@ -108,7 +108,7 @@ app.get('/', (req: Request, res: Response) => {
 
         <h3>🛠️ Contador de Frequência de Palavras</h3>
         <div class="input-group">
-          <label for="textInput">Digite seu texto:</label>
+          <label for="textInput">Digite seu texto</label>
           <textarea id="textInput" placeholder="Ex: Olá mundo, este é um teste de contador de palavras. Olá."></textarea>
         </div>
         <button onclick="countWords()">Contar Palavras</button>
