@@ -24,7 +24,7 @@ app.get('/', (req: Request, res: Response) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Servidor MCP - Contador de Palavras 🚀</title>
+      <title>🎇 Servidor MCP - Contador de Palavras 🎇</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
@@ -100,7 +100,7 @@ app.get('/', (req: Request, res: Response) => {
     </head>
     <body>
       <div class="container">
-        <h1>🚀 Servidor MCP - Contador de Palavras</h1>
+        <h1>🎇 Servidor MCP - Contador de Palavras</h1>
         <div class="status">
           <h2>✅ Status: Online</h2>
           <p>Port: ${process.env.PORT || 3000}</p>
