@@ -56,7 +56,7 @@ app.get('/', (req: Request, res: Response) => { // Tipar req e res
           margin: 15px 0;
           padding: 20px;
           border-radius: 10px;
-          border-left: 4px solid #00d4aa;
+          border-left: 44px solid #00d4aa; /* Ajustado para 4px para um estilo mais limpo */
         }
         .tool-name { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; }
         .tool-desc { opacity: 0.9; }
@@ -89,6 +89,23 @@ app.get('/', (req: Request, res: Response) => { // Tipar req e res
           border-radius: 5px;
           margin-top: 10px;
           font-family: monospace;
+          white-space: pre-wrap; /* Para garantir que o JSON formatado seja exibido corretamente */
+        }
+        .input-group {
+          margin-bottom: 10px;
+        }
+        .input-group label {
+          display: block;
+          margin-bottom: 5px;
+          color: white;
+        }
+        .input-group input[type="text"] {
+          width: calc(100% - 22px); /* Ajuste para padding */
+          padding: 10px;
+          border-radius: 5px;
+          border: 1px solid #00d4aa;
+          background-color: rgba(255, 255, 255, 0.9);
+          color: #333;
         }
       </style>
     </head>
@@ -138,7 +155,13 @@ app.get('/', (req: Request, res: Response) => { // Tipar req e res
           <button onclick="testUUID()">Gerar UUID</button>
           <button onclick="testCalculator()">Calcular 5!</button>
           <button onclick="testTodo()">Criar Tarefa</button>
-          <button onclick="testWeather()">Clima SP</button>
+
+          <div class="input-group">
+            <label for="weatherLocation">Localização do Clima:</label>
+            <input type="text" id="weatherLocation" placeholder="Ex: São Paulo, Rio de Janeiro">
+          </div>
+          <button onclick="testWeather()">Obter Clima</button>
+
           <button onclick="testValidator()">Validar Email</button>
           <div id="result"></div>
         </div>
@@ -165,7 +188,15 @@ app.get('/', (req: Request, res: Response) => { // Tipar req e res
         };
 
         const testWeather = async () => {
-          const response = await fetch('/api/weather', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'São Paulo'}) });
+          // Captura o valor do campo de input
+          const locationInput = document.getElementById('weatherLocation');
+          const location = (locationInput as HTMLInputElement).value || 'Unknown'; // Pega o valor ou 'Unknown' se estiver vazio
+
+          const response = await fetch('/api/weather', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ location: location }) // Envia a localização do input
+          });
           showResult(await response.json());
         };
 
