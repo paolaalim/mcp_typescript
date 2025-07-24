@@ -5,8 +5,7 @@ app.use(express.json());
 
 // Função auxiliar para contar a frequência de palavras
 function countWordFrequency(text: string): { [word: string]: number } {
-  // Converte o texto para minúsculas e remove pontuações, depois divide em palavras
-  const words = text.toLowerCase().match(/\b\w+\b/g); // Usa regex para encontrar palavras (letras, números e underscore)
+  const words = text.toLowerCase().match(/\b\w+\b/g);
 
   const frequency: { [word: string]: number } = {};
 
@@ -24,7 +23,7 @@ app.get('/', (req: Request, res: Response) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>🎇 Servidor MCP - Contador de Palavras 🎇</title>
+      <title>Servidor MCP - Contador de Palavras 🚀</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
@@ -47,7 +46,7 @@ app.get('/', (req: Request, res: Response) => {
           backdrop-filter: blur(10px);
           text-align: center;
           width: 100%;
-          max-width: 600px; /* Ajuste a largura para o textarea */
+          max-width: 600px;
         }
         h1 { color: #fff; margin-bottom: 20px; }
         .status {
@@ -86,7 +85,7 @@ app.get('/', (req: Request, res: Response) => {
           font-size: 1em;
         }
         .input-group textarea {
-          width: calc(100% - 22px); /* Ajuste para padding */
+          width: calc(100% - 22px);
           padding: 10px;
           border-radius: 5px;
           border: 1px solid #00d4aa;
@@ -100,7 +99,7 @@ app.get('/', (req: Request, res: Response) => {
     </head>
     <body>
       <div class="container">
-        <h1>🎇 Servidor MCP - Contador de Palavras</h1>
+        <h1>🚀 Servidor MCP - Contador de Palavras</h1>
         <div class="status">
           <h2>✅ Status: Online</h2>
           <p>Port: ${process.env.PORT || 3000}</p>
@@ -118,7 +117,6 @@ app.get('/', (req: Request, res: Response) => {
 
       <script>
         const showResult = (data) => {
-            // Exibe o JSON completo formatado
             document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
         };
 
@@ -131,12 +129,26 @@ app.get('/', (req: Request, res: Response) => {
             return;
           }
 
-          const response = await fetch('/api/word-count', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ text: text })
-          });
-          showResult(await response.json());
+          try { // Adicionado bloco try-catch para lidar com erros de rede/API
+            const response = await fetch('/api/word-count', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ text: text })
+            });
+
+            // Verifica se a resposta foi bem-sucedida (status 2xx)
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({ message: response.statusText }));
+              showResult({ error: `Erro na API: ${response.status}`, details: errorData });
+              return;
+            }
+
+            const data = await response.json();
+            showResult(data);
+          } catch (error) { // Captura erros de rede ou problemas na parsing do JSON
+            console.error('Erro ao conectar ou processar a resposta da API:', error);
+            showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: (error as Error).message });
+          }
         };
       </script>
     </body>
@@ -159,12 +171,13 @@ app.post('/api/word-count', (req: Request, res: Response) => {
   const { text } = req.body as { text: string };
 
   if (!text || typeof text !== 'string') {
+    // Retorna erro 400 se o texto for inválido ou ausente
     return res.status(400).json({ error: 'Texto inválido fornecido.' });
   }
 
   const wordFrequency = countWordFrequency(text);
 
-  res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum, count) => sum + count, 0) });
+  res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
 });
 
 // Removidas todas as outras rotas (UUID, Calculadora, TODOs, Clima, Validador)
