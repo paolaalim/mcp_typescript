@@ -78,7 +78,7 @@ app.get('/', (req: Request, res: Response) => {
         .input-group {
           margin-bottom: 15px;
         }
-        .input-group label {
+        .input-group label { /* Estilo para o label inserido via JS */
           display: block;
           margin-bottom: 8px;
           color: white;
@@ -108,7 +108,6 @@ app.get('/', (req: Request, res: Response) => {
 
         <h3>🛠️ Contador de Frequência de Palavras</h3>
         <div class="input-group">
-          <label for="textInput">Digite seu texto</label>
           <textarea id="textInput" placeholder="Ex: Olá mundo, este é um teste de contador de palavras. Olá."></textarea>
         </div>
         <button onclick="countWords()">Contar Palavras</button>
@@ -149,6 +148,17 @@ app.get('/', (req: Request, res: Response) => {
             showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: (error as Error).message });
           }
         };
+
+        // Adiciona o label dinamicamente após o DOM ser carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            const textInput = document.getElementById('textInput');
+            if (textInput && textInput.parentNode) {
+                const label = document.createElement('label');
+                label.setAttribute('for', 'textInput');
+                label.textContent = 'Digite seu texto:'; // Texto original do label
+                textInput.parentNode.insertBefore(label, textInput);
+            }
+        });
       </script>
     </body>
     </html>
