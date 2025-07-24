@@ -1,149 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Servidor MCP - Contador de Palavras 🚀</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+import express, { Request, Response } from 'express';
+import path from 'path'; // Importar o módulo 'path'
+
+const app = express();
+app.use(express.json());
+
+// Função auxiliar para contar a frequência de palavras
+function countWordFrequency(text: string): { [word: string]: number } {
+  const words = text.toLowerCase().match(/\b\w+\b/g);
+
+  const frequency: { [word: string]: number } = {};
+
+  if (words) {
+    for (const word of words) {
+      frequency[word] = (frequency[word] || 0) + 1;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      text-align: center;
-      width: 100%;
-      max-width: 600px;
-    }
-    h1 { color: #fff; margin-bottom: 20px; }
-    .status {
-      padding: 15px;
-      background: rgba(0, 212, 170, 0.2);
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-    button {
-      background: #00d4aa;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 15px;
-      font-size: 1.1em;
-    }
-    button:hover { background: #00b894; }
-    #result {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      font-family: monospace;
-      white-space: pre-wrap;
-      text-align: left;
-    }
-    .input-group {
-      margin-bottom: 15px;
-    }
-    .input-group label { /* Estilo para o label inserido via JS */
-      display: block;
-      margin-bottom: 8px;
-      color: white;
-      font-size: 1em;
-    }
-    .input-group textarea {
-      width: calc(100% - 22px);
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #00d4aa;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: #333;
-      font-size: 1em;
-      min-height: 150px;
-      resize: vertical;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>🚀 Servidor MCP - Contador de Palavras</h1>
-    <div class="status">
-      <h2>✅ Status: Online</h2>
-      <p>Port: <span id="serverPort"></span></p>
-      <p>Deployed: <span id="deployDate"></span></p>
-    </div>
+  }
+  return frequency;
+}
 
-    <h3>🛠️ Contador de Frequência de Palavras</h3>
-    <div class="input-group">
-      <textarea id="textInput" placeholder="Ex: Olá mundo, este é um teste de contador de palavras. Olá."></textarea>
-    </div>
-    <button onclick="countWords()">Contar Palavras</button>
-    <div id="result"></div>
-  </div>
+// Servir arquivos estáticos da pasta 'public'
+// Isso fará com que 'index.html' seja servido automaticamente na rota '/'
+app.use(express.static(path.join(__dirname, '../public')));
 
-  <script>
-    const showResult = (data) => {
-        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-    };
+// Health check
+app.get('/health', (req: Request, res: Response) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: '1.0.0'
+  });
+});
 
-    const countWords = async () => {
-      const textInput = document.getElementById('textInput');
-      const text = (textInput as HTMLTextAreaElement).value; // Coerção de tipo
+// API: Contador de Frequência de Palavras - Única API funcional
+app.post('/api/word-count', (req: Request, res: Response) => {
+  const { text } = req.body as { text: string };
 
-      if (!text.trim()) {
-        showResult({ error: "Por favor, digite algum texto para contar as palavras." });
-        return;
-      }
+  if (!text || typeof text !== 'string') {
+    return res.status(400).json({ error: 'Texto inválido fornecido.' });
+  }
 
-      try {
-        const response = await fetch('/api/word-count', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ text: text })
-        });
+  const wordFrequency = countWordFrequency(text);
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: response.statusText }));
-          showResult({ error: `Erro na API: ${response.status}`, details: errorData });
-          return;
-        }
+  res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
+});
 
-        const data = await response.json();
-        showResult(data);
-      } catch (error) {
-        console.error('Erro ao conectar ou processar a resposta da API:', error);
-        showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: (error as Error).message });
-      }
-    };
-
-    // Adiciona o label dinamicamente após o DOM ser carregado
-    document.addEventListener('DOMContentLoaded', () => {
-        const textInput = document.getElementById('textInput');
-        if (textInput && textInput.parentNode) {
-            const label = document.createElement('label');
-            label.setAttribute('for', 'textInput');
-            label.textContent = 'Digite seu texto:'; // Texto original do label
-            textInput.parentNode.insertBefore(label, textInput);
-        }
-
-        // Popula as informações de status do servidor via JS
-        // Essas informações virão de uma chamada ao /health endpoint se necessário
-        // Por enquanto, vamos hardcodar ou deixá-las em branco para não complicar.
-        // Se precisar que o JS no cliente busque essas informações do /health, podemos fazer depois.
-        document.getElementById('serverPort')!.textContent = window.location.port || '80'; // Ou o port real do Easypanel
-        document.getElementById('deployDate')!.textContent = new Date().toLocaleString();
-    });
-  </script>
-</body>
-</html>
+// Iniciar servidor
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`🚀 Servidor MCP (Contador de Palavras) rodando na porta ${port}`);
+  console.log(`📡 Health check: http://localhost:${port}/health`);
+  console.log(`🌐 Interface: http://localhost:${port}/`);
+});
