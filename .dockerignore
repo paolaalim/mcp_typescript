@@ -9,7 +9,6 @@ coverage
 .coverage
 .eslintrc
 .prettierrc
-dist
-src
+dist # Mantenha esta linha para não copiar a pasta de saída da compilação
 *.md
 .DS_Store
