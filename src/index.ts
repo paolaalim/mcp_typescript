@@ -10,7 +10,7 @@ app.get('/', (req: Request, res: Response) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Servidor MCP - Gerador de UUID 🚀</title>
+      <title>⭐ Servidor MCP - Gerador de UUID ⭐</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
@@ -71,7 +71,7 @@ app.get('/', (req: Request, res: Response) => {
           color: white;
           font-size: 1em;
         }
-        .input-group input[type="number"], .input-group select { /* Adicionado select */
+        .input-group input[type="number"], .input-group select {
           width: calc(100% - 22px);
           padding: 10px;
           border-radius: 5px;
@@ -84,7 +84,7 @@ app.get('/', (req: Request, res: Response) => {
     </head>
     <body>
       <div class="container">
-        <h1>🚀 Servidor MCP - Gerador de UUID</h1>
+        <h1>⭐ Servidor MCP - Gerador de UUID ⭐</h1>
         <div class="status">
           <h2>✅ Status: Online</h2>
           <p>Port: ${process.env.PORT || 3000}</p>
@@ -109,29 +109,30 @@ app.get('/', (req: Request, res: Response) => {
 
       <script>
         const showResult = (data) => {
-            // Verifica se a resposta contém a propriedade 'uuids'
+            // Verifica se a resposta contém a propriedade 'uuids' e se é um array
             if (data && Array.isArray(data.uuids)) {
-                // Junta todos os UUIDs com uma quebra de linha para exibir um por um
+                // Junta todos os UUIDs com uma quebra de linha real (\n)
+                // O elemento <pre> no HTML garante que \n seja renderizado como quebra de linha.
                 document.getElementById('result').innerHTML = '<pre>' + data.uuids.join('\\n') + '</pre>';
             } else {
-                // Caso contrário, exibe a resposta original (pode ser um erro)
+                // Caso contrário, exibe a resposta original JSON (pode ser um erro ou outro formato)
                 document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
             }
         };
 
         const generateUUID = async () => {
-          const countInput = document.getElementById('uuidCount');
-          let count = parseInt((countInput as HTMLInputElement).value);
+          const countInput = document.getElementById('uuidCount') as HTMLInputElement;
+          let count = parseInt(countInput.value);
           if (isNaN(count) || count < 1) count = 1;
           if (count > 10) count = 10;
 
           const formatSelect = document.getElementById('uuidFormat') as HTMLSelectElement;
-          const format = formatSelect.value; // Pega o valor selecionado ('simple' ou 'formatted')
+          const format = formatSelect.value;
 
           const response = await fetch('/api/uuid', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ count: count, format: format }) // Envia o formato selecionado
+            body: JSON.stringify({ count: count, format: format })
           });
           showResult(await response.json());
         };
@@ -154,8 +155,8 @@ app.get('/health', (req: Request, res: Response) => {
 // API: Gerador de UUID - Única API funcional
 app.post('/api/uuid', (req: Request, res: Response) => {
   const { count, format } = req.body as { count?: number; format?: string };
-  const numCount = Math.min(count || 1, 10); // Limita a 10 UUIDs
-  const selectedFormat = format || 'simple'; // Formato 'simple' ou 'formatted'
+  const numCount = Math.min(count || 1, 10);
+  const selectedFormat = format || 'simple';
   const uuids = Array.from({ length: numCount }, () => {
     const uuid = uuidv4();
     return selectedFormat === 'formatted' ? `UUID: ${uuid}` : uuid;
