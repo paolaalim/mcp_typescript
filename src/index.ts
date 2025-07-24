@@ -4,9 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 const app = express();
 app.use(express.json());
 
-// Removido armazenamento em memória de todos e weatherCache
-// para focar apenas no UUID.
-
 // Página inicial - Simplificada para focar no Gerador de UUID
 app.get('/', (req: Request, res: Response) => {
   res.send(`
@@ -74,7 +71,7 @@ app.get('/', (req: Request, res: Response) => {
           color: white;
           font-size: 1em;
         }
-        .input-group input[type="number"] {
+        .input-group input[type="number"], .input-group select { /* Adicionado select */
           width: calc(100% - 22px);
           padding: 10px;
           border-radius: 5px;
@@ -99,25 +96,42 @@ app.get('/', (req: Request, res: Response) => {
           <label for="uuidCount">Quantos UUIDs gerar (max 10):</label>
           <input type="number" id="uuidCount" value="1" min="1" max="10">
         </div>
+        <div class="input-group">
+          <label for="uuidFormat">Formato do UUID:</label>
+          <select id="uuidFormat">
+            <option value="simple">Simples</option>
+            <option value="formatted">Formatado (UUID: ...)</option>
+          </select>
+        </div>
         <button onclick="generateUUID()">Gerar UUID(s)</button>
         <div id="result"></div>
       </div>
 
       <script>
         const showResult = (data) => {
-          document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            // Verifica se a resposta contém a propriedade 'uuids'
+            if (data && Array.isArray(data.uuids)) {
+                // Junta todos os UUIDs com uma quebra de linha para exibir um por um
+                document.getElementById('result').innerHTML = '<pre>' + data.uuids.join('\\n') + '</pre>';
+            } else {
+                // Caso contrário, exibe a resposta original (pode ser um erro)
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            }
         };
 
         const generateUUID = async () => {
           const countInput = document.getElementById('uuidCount');
-          let count = parseInt((countInput).value);
+          let count = parseInt((countInput as HTMLInputElement).value);
           if (isNaN(count) || count < 1) count = 1;
           if (count > 10) count = 10;
+
+          const formatSelect = document.getElementById('uuidFormat') as HTMLSelectElement;
+          const format = formatSelect.value; // Pega o valor selecionado ('simple' ou 'formatted')
 
           const response = await fetch('/api/uuid', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ count: count, format: 'simple' })
+            body: JSON.stringify({ count: count, format: format }) // Envia o formato selecionado
           });
           showResult(await response.json());
         };
@@ -148,9 +162,6 @@ app.post('/api/uuid', (req: Request, res: Response) => {
   });
   res.json({ uuids, count: numCount, format: selectedFormat });
 });
-
-// Removidas todas as outras rotas (Calculadora, TODOs, Clima, Validador)
-// para manter o servidor focado no Gerador de UUID.
 
 // Iniciar servidor
 const port = process.env.PORT || 3000;
