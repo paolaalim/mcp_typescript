@@ -56,7 +56,7 @@
     .input-group {
       margin-bottom: 15px;
     }
-    .input-group label { /* Estilo para o label inserido via JS */
+    .input-group label {
       display: block;
       margin-bottom: 8px;
       color: white;
@@ -99,7 +99,7 @@
 
     const countWords = async () => {
       const textInput = document.getElementById('textInput');
-      const text = (textInput as HTMLTextAreaElement).value; // Coerção de tipo
+      const text = (textInput as HTMLTextAreaElement).value;
 
       if (!text.trim()) {
         showResult({ error: "Por favor, digite algum texto para contar as palavras." });
@@ -137,11 +137,7 @@
             textInput.parentNode.insertBefore(label, textInput);
         }
 
-        // Popula as informações de status do servidor via JS
-        // Essas informações virão de uma chamada ao /health endpoint se necessário
-        // Por enquanto, vamos hardcodar ou deixá-las em branco para não complicar.
-        // Se precisar que o JS no cliente busque essas informações do /health, podemos fazer depois.
-        document.getElementById('serverPort')!.textContent = window.location.port || '80'; // Ou o port real do Easypanel
+        document.getElementById('serverPort')!.textContent = window.location.port || '80';
         document.getElementById('deployDate')!.textContent = new Date().toLocaleString();
     });
   </script>
