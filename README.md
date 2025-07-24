@@ -1,4 +1,4 @@
-# Servidor MCP TypeScript 🚀
+# Servidor MCP TypeScript ✨
 
 Um servidor Model Context Protocol (MCP) completo em TypeScript com 6 ferramentas funcionais e interface web.
 
@@ -11,7 +11,7 @@ Um servidor Model Context Protocol (MCP) completo em TypeScript com 6 ferramenta
 5. **Gerador de QR Code** - Códigos QR personalizáveis
 6. **Validador de Dados** - Validação de emails, URLs, JSON, etc.
 
-## 🚀 Instalação e Uso
+## ✨ Instalação e Uso
 
 ### Instalação
 ```bash
