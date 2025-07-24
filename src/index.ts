@@ -108,7 +108,7 @@ app.get('/', (req: Request, res: Response) => {
 
         <h3>🛠️ Contador de Frequência de Palavras</h3>
         <div class="input-group">
-          <label for="textInput">Digite seu texto aqui:</label>
+          <label for="textInput">Digite seu texto:</label>
           <textarea id="textInput" placeholder="Ex: Olá mundo, este é um teste de contador de palavras. Olá."></textarea>
         </div>
         <button onclick="countWords()">Contar Palavras</button>
@@ -129,14 +129,13 @@ app.get('/', (req: Request, res: Response) => {
             return;
           }
 
-          try { // Adicionado bloco try-catch para lidar com erros de rede/API
+          try {
             const response = await fetch('/api/word-count', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({ text: text })
             });
 
-            // Verifica se a resposta foi bem-sucedida (status 2xx)
             if (!response.ok) {
               const errorData = await response.json().catch(() => ({ message: response.statusText }));
               showResult({ error: `Erro na API: ${response.status}`, details: errorData });
@@ -145,7 +144,7 @@ app.get('/', (req: Request, res: Response) => {
 
             const data = await response.json();
             showResult(data);
-          } catch (error) { // Captura erros de rede ou problemas na parsing do JSON
+          } catch (error) {
             console.error('Erro ao conectar ou processar a resposta da API:', error);
             showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: (error as Error).message });
           }
@@ -171,7 +170,6 @@ app.post('/api/word-count', (req: Request, res: Response) => {
   const { text } = req.body as { text: string };
 
   if (!text || typeof text !== 'string') {
-    // Retorna erro 400 se o texto for inválido ou ausente
     return res.status(400).json({ error: 'Texto inválido fornecido.' });
   }
 
@@ -179,9 +177,6 @@ app.post('/api/word-count', (req: Request, res: Response) => {
 
   res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
 });
-
-// Removidas todas as outras rotas (UUID, Calculadora, TODOs, Clima, Validador)
-// para manter o servidor focado no Contador de Palavras.
 
 // Iniciar servidor
 const port = process.env.PORT || 3000;
