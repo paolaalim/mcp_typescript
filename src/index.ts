@@ -1,5 +1,13 @@
+// src/index.ts (Corrigido)
+
 import express, { Request, Response } from 'express';
-import path from 'path'; // Importar o módulo 'path'
+import path from 'path';
+// 1. Importe as funções necessárias dos módulos 'url' e 'path'
+import { fileURLToPath } from 'url';
+
+// 2. Recrie as variáveis __filename e __dirname para o escopo de Módulos ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
@@ -18,8 +26,8 @@ function countWordFrequency(text: string): { [word: string]: number } {
   return frequency;
 }
 
-// Servir arquivos estáticos da pasta 'public'
-// Isso fará com que 'index.html' seja servido automaticamente na rota '/'
+// 3. Use o __dirname recriado para servir os arquivos estáticos.
+// O caminho '../public' está correto, pois o __dirname apontará para a pasta 'dist' após a compilação.
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Health check
