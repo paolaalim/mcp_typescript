@@ -27,6 +27,7 @@
       max-width: 600px;
     }
     h1 { color: #fff; margin-bottom: 20px; }
+    h3 { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;}
     .status {
       padding: 15px;
       background: rgba(0, 212, 170, 0.2);
@@ -42,17 +43,23 @@
       cursor: pointer;
       margin-top: 15px;
       font-size: 1.1em;
+      transition: background-color 0.3s;
     }
     button:hover { background: #00b894; }
     #result {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      border-radius: 10px;
       margin-top: 20px;
       font-family: monospace;
       white-space: pre-wrap;
       text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
     }
+    #result h4 { margin-top: 0; }
+    #result ul { padding-left: 20px; }
+    #result li { margin-bottom: 5px; }
     .input-group {
       margin-bottom: 15px;
     }
@@ -80,26 +87,56 @@
     <h1>🚀 Servidor MCP - Contador de Palavras</h1>
     <div class="status">
       <h2>✅ Status: Online</h2>
-      <p>Port: <span id="serverPort"></span></p>
-      <p>Deployed: <span id="deployDate"></span></p>
+      <p>Porta: <span id="serverPort"></span></p>
+      <p>Data: <span id="deployDate"></span></p>
     </div>
 
-    <h3>🛠️ Contador de Frequência de Palavras</h3>
+    <h3>🛠️ Ferramenta: Contador de Frequência de Palavras</h3>
     <div class="input-group">
       <textarea id="textInput" placeholder="Ex: Olá mundo, este é um teste de contador de palavras. Olá."></textarea>
     </div>
     <button onclick="countWords()">Contar Palavras</button>
-    <div id="result"></div>
+    
+    <div id="result">O resultado aparecerá aqui...</div>
   </div>
 
   <script>
+    // Função atualizada para exibir o resultado de forma mais clara
     const showResult = (data) => {
-        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        const resultDiv = document.getElementById('result');
+        
+        // Limpa o conteúdo anterior
+        resultDiv.innerHTML = '';
+
+        if (data.error) {
+            // Se houver um erro, exibe a mensagem de erro
+            resultDiv.innerHTML = `<p style="color: #ffbaba;"><strong>Erro:</strong> ${data.error}</p>`;
+            if(data.details) {
+                 resultDiv.innerHTML += `<p style="color: #ffbaba; font-size: 0.9em;">Detalhes: ${JSON.stringify(data.details)}</p>`;
+            }
+        } else {
+            // Se for sucesso, constrói o HTML para o resultado
+            const totalWords = data.total_words;
+            const wordCounts = data.word_counts;
+
+            let html = `<h4>Análise Completa:</h4>`;
+            html += `<p><strong>Total de Palavras Únicas:</strong> ${Object.keys(wordCounts).length}</p>`;
+            html += `<p><strong>Total de Palavras (Geral):</strong> ${totalWords}</p>`;
+            html += `<ul>`;
+            
+            // Cria um item de lista para cada palavra e sua contagem
+            for (const word in wordCounts) {
+                html += `<li><strong>${word}:</strong> ${wordCounts[word]}</li>`;
+            }
+
+            html += `</ul>`;
+            resultDiv.innerHTML = html;
+        }
     };
 
     const countWords = async () => {
       const textInput = document.getElementById('textInput');
-      const text = (textInput as HTMLTextAreaElement).value;
+      const text = textInput.value;
 
       if (!text.trim()) {
         showResult({ error: "Por favor, digite algum texto para contar as palavras." });
@@ -123,22 +160,21 @@
         showResult(data);
       } catch (error) {
         console.error('Erro ao conectar ou processar a resposta da API:', error);
-        showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: (error as Error).message });
+        showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message });
       }
     };
 
-    // Adiciona o label dinamicamente após o DOM ser carregado
     document.addEventListener('DOMContentLoaded', () => {
         const textInput = document.getElementById('textInput');
         if (textInput && textInput.parentNode) {
             const label = document.createElement('label');
             label.setAttribute('for', 'textInput');
-            label.textContent = 'Digite seu texto:'; // Texto original do label
+            label.textContent = 'Digite seu texto:';
             textInput.parentNode.insertBefore(label, textInput);
         }
 
-        document.getElementById('serverPort')!.textContent = window.location.port || '80';
-        document.getElementById('deployDate')!.textContent = new Date().toLocaleString();
+        document.getElementById('serverPort').textContent = window.location.port || '80';
+        document.getElementById('deployDate').textContent = new Date().toLocaleString();
     });
   </script>
 </body>
