@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>⭐ Servidor MCP - Contador de Palavras ⭐ </title>
+  <title>⭐ Servidor MCP - Contador de Palavras & Gerador de UUID ⭐ </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
@@ -14,6 +14,7 @@
       color: white;
       min-height: 100vh;
       display: flex;
+      flex-direction: column; /* Alterado para coluna para melhor layout */
       align-items: center;
       justify-content: center;
     }
@@ -25,6 +26,7 @@
       text-align: center;
       width: 100%;
       max-width: 600px;
+      margin-bottom: 20px; /* Adicionado margem inferior */
     }
     h1 { color: #fff; margin-bottom: 20px; }
     h3 { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;}
@@ -46,7 +48,7 @@
       transition: background-color 0.3s;
     }
     button:hover { background: #00b894; }
-    #result {
+    .result-box { /* Classe genérica para caixas de resultado */
       background: rgba(0, 0, 0, 0.2);
       padding: 20px;
       border-radius: 10px;
@@ -57,9 +59,9 @@
       max-height: 300px;
       overflow-y: auto;
     }
-    #result h4 { margin-top: 0; }
-    #result ul { padding-left: 20px; }
-    #result li { margin-bottom: 5px; }
+    .result-box h4 { margin-top: 0; }
+    .result-box ul { padding-left: 20px; }
+    .result-box li { margin-bottom: 5px; }
     .input-group {
       margin-bottom: 15px;
     }
@@ -69,7 +71,7 @@
       color: white;
       font-size: 1em;
     }
-    .input-group textarea {
+    .input-group textarea, .input-group input, .input-group select { /* Adicionado input e select */
       width: calc(100% - 22px);
       padding: 10px;
       border-radius: 5px;
@@ -77,14 +79,19 @@
       background-color: rgba(255, 255, 255, 0.9);
       color: #333;
       font-size: 1em;
-      min-height: 150px;
+      min-height: 40px; /* Altura mínima para inputs */
       resize: vertical;
+    }
+    /* Estilos específicos para a nova seção de UUID */
+    #uuidResult {
+      max-height: 200px; /* Altura menor para UUIDs */
+      overflow-y: auto;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1> ⭐ Servidor MCP - Contador de Palavras ⭐ </h1>
+    <h1> ⭐ Servidor MCP - Contador de Palavras & Gerador de UUID ⭐ </h1>
     <div class="status">
       <h2>✅ Status: Online</h2>
       <p>Porta: <span id="serverPort"></span></p>
@@ -93,53 +100,77 @@
 
     <h3>🛠️ Ferramenta: Contador de Frequência de Palavras</h3>
     <div class="input-group">
+      <label for="textInput">Digite seu texto:</label>
       <textarea id="textInput" placeholder="Olá digite as palavras aqui!"></textarea>
     </div>
     <button onclick="countWords()">Contar Palavras</button>
-    
-    <div id="result">O resultado aparecerá aqui...</div>
+
+    <div id="wordCountResult" class="result-box">O resultado aparecerá aqui...</div>
+  </div>
+
+  <div class="container">
+    <h3>🆔 Ferramenta: Gerador de UUID</h3>
+    <div class="input-group">
+      <label for="uuidCount">Quantidade de UUIDs (padrão 1):</label>
+      <input type="number" id="uuidCount" value="1" min="1">
+    </div>
+    <div class="input-group">
+      <label for="uuidFormat">Formato:</label>
+      <select id="uuidFormat">
+        <option value="formatted">Com hífens (Ex: xxxxxxxx-xxxx-...)</option>
+        <option value="raw">Sem hífens (Ex: xxxxxxxxxxxxxxxx...)</option>
+      </select>
+    </div>
+    <button onclick="generateUUIDs()">Gerar UUIDs</button>
+    <div id="uuidResult" class="result-box">Os UUIDs gerados aparecerão aqui...</div>
   </div>
 
   <script>
-    // Função atualizada para exibir o resultado de forma mais clara
-    const showResult = (data) => {
-        const resultDiv = document.getElementById('result');
-        
-        // Limpa o conteúdo anterior
-        resultDiv.innerHTML = '';
+    // Função auxiliar para exibir resultados (generalizada)
+    const showResult = (elementId, data, isUuid = false) => {
+        const resultDiv = document.getElementById(elementId);
+        resultDiv.innerHTML = ''; // Limpa o conteúdo anterior
 
         if (data.error) {
-            // Se houver um erro, exibe a mensagem de erro
             resultDiv.innerHTML = `<p style="color: #ffbaba;"><strong>Erro:</strong> ${data.error}</p>`;
             if(data.details) {
                  resultDiv.innerHTML += `<p style="color: #ffbaba; font-size: 0.9em;">Detalhes: ${JSON.stringify(data.details)}</p>`;
             }
         } else {
-            // Se for sucesso, constrói o HTML para o resultado
-            const totalWords = data.total_words;
-            const wordCounts = data.word_counts;
+            if (isUuid) {
+                // Exibição para UUIDs
+                let html = `<h4>UUIDs Gerados:</h4>`;
+                html += `<ul>`;
+                data.uuids.forEach(uuid => {
+                    html += `<li><code>${uuid}</code></li>`;
+                });
+                html += `</ul>`;
+                resultDiv.innerHTML = html;
+            } else {
+                // Exibição para Contador de Palavras
+                const totalWords = data.total_words;
+                const wordCounts = data.word_counts;
 
-            let html = `<h4>Análise Completa:</h4>`;
-            html += `<p><strong>Total de Palavras Únicas:</strong> ${Object.keys(wordCounts).length}</p>`;
-            html += `<p><strong>Total de Palavras (Geral):</strong> ${totalWords}</p>`;
-            html += `<ul>`;
-            
-            // Cria um item de lista para cada palavra e sua contagem
-            for (const word in wordCounts) {
-                html += `<li><strong>${word}:</strong> ${wordCounts[word]}</li>`;
+                let html = `<h4>Análise Completa:</h4>`;
+                html += `<p><strong>Total de Palavras Únicas:</strong> ${Object.keys(wordCounts).length}</p>`;
+                html += `<p><strong>Total de Palavras (Geral):</strong> ${totalWords}</p>`;
+                html += `<ul>`;
+                for (const word in wordCounts) {
+                    html += `<li><strong>${word}:</strong> ${wordCounts[word]}</li>`;
+                }
+                html += `</ul>`;
+                resultDiv.innerHTML = html;
             }
-
-            html += `</ul>`;
-            resultDiv.innerHTML = html;
         }
     };
 
+    // Função para contar palavras (existente)
     const countWords = async () => {
       const textInput = document.getElementById('textInput');
       const text = textInput.value;
 
       if (!text.trim()) {
-        showResult({ error: "Por favor, digite algum texto para contar as palavras." });
+        showResult('wordCountResult', { error: "Por favor, digite algum texto para contar as palavras." });
         return;
       }
 
@@ -152,27 +183,54 @@
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: response.statusText }));
-          showResult({ error: `Erro na API: ${response.status}`, details: errorData });
+          showResult('wordCountResult', { error: `Erro na API: ${response.status}`, details: errorData });
           return;
         }
 
         const data = await response.json();
-        showResult(data);
+        showResult('wordCountResult', data);
       } catch (error) {
-        console.error('Erro ao conectar ou processar a resposta da API:', error);
-        showResult({ error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message });
+        console.error('Erro ao conectar ou processar a resposta da API de Contador de Palavras:', error);
+        showResult('wordCountResult', { error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message });
+      }
+    };
+
+    // NOVO: Função para gerar UUIDs
+    const generateUUIDs = async () => {
+      const uuidCountInput = document.getElementById('uuidCount');
+      const uuidFormatSelect = document.getElementById('uuidFormat');
+
+      const count = parseInt(uuidCountInput.value, 10);
+      const format = uuidFormatSelect.value;
+
+      if (isNaN(count) || count <= 0) {
+        showResult('uuidResult', { error: "Por favor, insira um número válido e positivo para a quantidade de UUIDs." }, true);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/generate-uuid', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ count: count, format: format })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: response.statusText }));
+          showResult('uuidResult', { error: `Erro na API: ${response.status}`, details: errorData }, true);
+          return;
+        }
+
+        const data = await response.json();
+        showResult('uuidResult', data, true);
+      } catch (error) {
+        console.error('Erro ao conectar ou processar a resposta da API de Gerador de UUID:', error);
+        showResult('uuidResult', { error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message }, true);
       }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        const textInput = document.getElementById('textInput');
-        if (textInput && textInput.parentNode) {
-            const label = document.createElement('label');
-            label.setAttribute('for', 'textInput');
-            label.textContent = 'Digite seu texto:';
-            textInput.parentNode.insertBefore(label, textInput);
-        }
-
+        // Atualiza a porta e data de deploy
         document.getElementById('serverPort').textContent = window.location.port || '80';
         document.getElementById('deployDate').textContent = new Date().toLocaleString();
     });
