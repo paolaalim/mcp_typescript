@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fetch from 'node-fetch'; // Importar node-fetch para fazer requisições HTTP
+import { v4 as uuidv4 } from 'uuid'; // Importar a função v4 do pacote uuid
 
 // Recrie as variáveis __filename e __dirname para o escopo de Módulos ES
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,22 @@ function countWordFrequency(text: string): { [word: string]: number } {
     }
   }
   return frequency;
+}
+
+// NOVO: Função auxiliar para gerar UUIDs
+interface GenerateUuidArgs {
+  count?: number;
+  format?: 'formatted' | 'raw';
+}
+
+function generateUuids(options: GenerateUuidArgs = {}): string[] {
+  const { count = 1, format = 'formatted' } = options;
+  const uuids: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const newUuid = uuidv4();
+    uuids.push(format === 'raw' ? newUuid.replace(/-/g, '') : newUuid);
+  }
+  return uuids;
 }
 
 // Servir arquivos estáticos (interface web do contador de palavras)
@@ -52,7 +69,27 @@ app.post('/api/word-count', (req: Request, res: Response) => {
   res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
 });
 
-// NOVO ENDPOINT: API para integração com IA (Claude)
+// NOVO ENDPOINT: API para Gerar UUIDs
+app.post('/api/generate-uuid', (req: Request, res: Response) => {
+  const { count, format } = req.body as GenerateUuidArgs;
+
+  if (count !== undefined && (typeof count !== 'number' || count <= 0)) {
+    return res.status(400).json({ error: 'Parâmetro "count" inválido. Deve ser um número inteiro positivo.' });
+  }
+  if (format !== undefined && format !== 'formatted' && format !== 'raw') {
+    return res.status(400).json({ error: 'Parâmetro "format" inválido. Use "formatted" ou "raw".' });
+  }
+
+  try {
+    const uuids = generateUuids({ count, format });
+    res.json({ success: true, uuids });
+  } catch (error: any) {
+    console.error('Erro ao gerar UUIDs:', error);
+    res.status(500).json({ error: 'Erro interno do servidor ao gerar UUIDs.', details: error.message });
+  }
+});
+
+// Endpoint de IA: API para integração com IA (Claude)
 app.post('/api/ai-tool', async (req: Request, res: Response) => {
   const { prompt } = req.body as { prompt: string };
 
@@ -63,7 +100,7 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
   // Obtenha a chave de API e o endpoint do Claude de variáveis de ambiente
   const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
   // Este é um exemplo de endpoint. Verifique a documentação oficial do Claude para o endpoint correto.
-  const CLAUDE_API_URL = process.env.CLAUDE_API_URL || 'https://api.anthropic.com/v1/messages'; 
+  const CLAUDE_API_URL = process.env.CLAUDE_API_URL || 'https://api.anthropic.com/v1/messages';
 
   if (!CLAUDE_API_KEY) {
     console.error('CLAUDE_API_KEY não está configurada nas variáveis de ambiente.');
@@ -72,8 +109,8 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
 
   try {
     // Exemplo de como você faria a chamada para a API do Claude
-    // ATENÇÃO: Os detalhes do corpo da requisição (model, messages, etc.) 
-    // dependem da versão da API do Claude que você está usando. 
+    // ATENÇÃO: Os detalhes do corpo da requisição (model, messages, etc.)
+    // dependem da versão da API do Claude que você está usando.
     // Consulte a documentação oficial da Anthropic (Claude) para obter o formato correto.
     const claudeResponse = await fetch(CLAUDE_API_URL, {
       method: 'POST',
@@ -81,7 +118,7 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
         'Content-Type': 'application/json',
         'x-api-key': CLAUDE_API_KEY,
         // Inclua outros headers necessários, como Anthropic-Version
-        'anthropic-version': '2023-06-01' 
+        'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
         model: "claude-3-opus-20240229", // Ou outro modelo, como "claude-3-sonnet-20240229"
@@ -114,8 +151,9 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
 // Iniciar servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`⚡ Servidor MCP (Contador de Palavras + IA) rodando na porta ${port}`);
+  console.log(`⚡ Servidor MCP (Contador de Palavras + IA + UUID) rodando na porta ${port}`);
   console.log(`📡 Health check: http://localhost:${port}/health`);
   console.log(`🌐 Interface do contador de palavras: http://localhost:${port}/`);
   console.log(`🤖 Endpoint de IA: POST http://localhost:${port}/api/ai-tool`);
+  console.log(`🆔 Endpoint de Gerador de UUID: POST http://localhost:${port}/api/generate-uuid`);
 });
