@@ -114,7 +114,7 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
 // Iniciar servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`🚀 Servidor MCP (Contador de Palavras + IA) rodando na porta ${port}`);
+  console.log(`⚡ Servidor MCP (Contador de Palavras + IA) rodando na porta ${port}`);
   console.log(`📡 Health check: http://localhost:${port}/health`);
   console.log(`🌐 Interface do contador de palavras: http://localhost:${port}/`);
   console.log(`🤖 Endpoint de IA: POST http://localhost:${port}/api/ai-tool`);
