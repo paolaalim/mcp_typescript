@@ -1,14 +1,15 @@
 /* public/style.css */
 
 :root {
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --bg-color: #f8f9fa;
-  --card-bg-color: #ffffff;
-  --border-color: #dee2e6;
-  --text-color: #495057;
-  --online-color: #28a745;
-  --offline-color: #dc3545;
+  --primary-color: #28a745; /* Verde vibrante */
+  --secondary-color: #6c757d; /* Cinza para textos secundários */
+  --bg-color: #f8f9fa; /* Fundo branco/cinza claro */
+  --card-bg-color: #ffffff; /* Fundo de cards branco */
+  --border-color: #dee2e6; /* Cor de borda cinza claro */
+  --text-color: #343a40; /* Cor de texto escuro */
+  --online-color: #28a745; /* Verde para status online */
+  --offline-color: #dc3545; /* Vermelho para status offline */
+  --header-bg-color: #216a3a; /* Verde mais escuro para o topo */
 }
 
 body {
@@ -26,8 +27,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #fff;
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--header-bg-color); /* Fundo verde escuro */
+  border-bottom: 1px solid var(--header-bg-color);
+  color: white;
 }
 .topbar-logo {
   display: flex;
@@ -40,7 +42,7 @@ body {
 }
 .logo-text {
   font-weight: bold;
-  color: #333;
+  color: white; /* Cor do texto do logo */
 }
 .topbar-right {
   display: flex;
@@ -59,6 +61,7 @@ body {
 .user-profile {
   display: flex;
   align-items: center;
+  color: white;
 }
 .user-avatar {
   width: 35px;
@@ -80,7 +83,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background-color: #fff;
+  background-color: var(--card-bg-color); /* Fundo branco */
   border-right: 1px solid var(--border-color);
   padding: 20px;
   flex-shrink: 0;
@@ -196,5 +199,5 @@ button {
   transition: background-color 0.2s;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #218838;
 }
