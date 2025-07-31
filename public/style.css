@@ -83,7 +83,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background-color: var(--card-bg-color); /* Fundo branco */
+  background-color: var(--header-bg-color);
   border-right: 1px solid var(--border-color);
   padding: 20px;
   flex-shrink: 0;
@@ -91,6 +91,7 @@ body {
 .sidebar-header h2 {
   font-size: 1.2em;
   margin-bottom: 15px;
+  color: #ffffff;
 }
 .sidebar-search {
   width: 100%;
@@ -111,10 +112,10 @@ body {
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.2s;
-  color: var(--text-color);
+  color: #ffffff;
 }
 .nav-item:hover, .nav-item.active {
-  background-color: #e9ecef;
+  background-color: #28a745;
 }
 .nav-icon {
   margin-right: 10px;
