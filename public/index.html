@@ -1,50 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>⭐ Servidor MCP - Contador de Palavras & Gerador de UUID ⭐ </title>
+  <title>Sistema Solar - Dashboard</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1> ⭐ Servidor MCP - Contador de Palavras & Gerador de UUID ⭐ </h1>
-    <div class="status">
-      <h2>✅ Status: Online</h2>
-      <p>Porta: <span id="serverPort"></span></p>
-      <p>Data: <span id="deployDate"></span></p>
-    </div>
 
-    <h3>🛠️ Ferramenta: Contador de Frequência de Palavras</h3>
-    <div class="input-group">
-      <label for="textInput">Digite seu texto:</label>
-      <textarea id="textInput" placeholder="Olá digite as palavras aqui!"></textarea>
+  <header class="topbar">
+    <div class="topbar-logo">
+      <img src="https://cdn.icon-icons.com/icons2/2389/PNG/512/sun_solar_system_weather_icon_144988.png" alt="Logo" class="logo-img">
+      <span class="logo-text">Perfil: SOLAR | Defensoria...</span>
     </div>
-    <button onclick="countWords()">Contar Palavras</button>
+    <div class="topbar-right">
+      <div class="search-bar-container">
+        <input type="text" placeholder="Procure uma Comarca..." class="search-input">
+      </div>
+      <div class="user-profile">
+        <span>Samuel Santos de Alencar</span>
+        <div class="user-avatar">SA</div>
+      </div>
+    </div>
+  </header>
 
-    <div id="wordCountResult" class="result-box">O resultado aparecerá aqui...</div>
-  </div>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Selecione uma Comarca</h2>
+        <input type="text" placeholder="Procurar comarca..." class="sidebar-search">
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span class="nav-text">Buscar</span>
+          </li>
+          <li class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Perfil</span>
+          </li>
+          <li class="nav-item">
+            <span class="nav-icon">📄</span>
+            <span class="nav-text">Receber</span>
+          </li>
+          </ul>
+      </nav>
+    </aside>
 
-  <div class="container">
-    <h3>🆔 Ferramenta: Gerador de UUID</h3>
-    <div class="input-group">
-      <label for="uuidCount">Quantidade de UUIDs (padrão 1):</label>
-      <input type="number" id="uuidCount" value="1" min="1">
-    </div>
-    <div class="input-group">
-      <label for="uuidFormat">Formato:</label>
-      <select id="uuidFormat">
-        <option value="formatted">Com hífens (Ex: xxxxxxxx-xxxx-...)</option>
-        <option value="raw">Sem hífens (Ex: xxxxxxxxxxxxxxxx...)</option>
-      </select>
-    </div>
-    <button onclick="generateUUIDs()">Gerar UUIDs</button>
-    <div id="uuidResult" class="result-box">Os UUIDs gerados aparecerão aqui...</div>
+    <main class="main-content">
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>Contador de Palavras</h3>
+            <span class="card-status status-online">Online</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Status:</strong> Online</p>
+            <div class="input-group">
+              <label for="textInput">Digite seu texto:</label>
+              <textarea id="textInput" placeholder="Olá digite as palavras aqui!"></textarea>
+            </div>
+            <button onclick="countWords()">Contar Palavras</button>
+            <div id="wordCountResult" class="result-box">O resultado aparecerá aqui...</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Gerador de UUID</h3>
+            <span class="card-status status-online">Online</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Status:</strong> Online</p>
+            <div class="input-group">
+              <label for="uuidCount">Quantidade de UUIDs (padrão 1):</label>
+              <input type="number" id="uuidCount" value="1" min="1">
+            </div>
+            <div class="input-group">
+              <label for="uuidFormat">Formato:</label>
+              <select id="uuidFormat">
+                <option value="formatted">Com hífens</option>
+                <option value="raw">Sem hífens</option>
+              </select>
+            </div>
+            <button onclick="generateUUIDs()">Gerar UUIDs</button>
+            <div id="uuidResult" class="result-box">Os UUIDs gerados aparecerão aqui...</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Ferramenta de IA (Claude)</h3>
+            <span class="card-status status-online">Online</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Status:</strong> Online</p>
+            <div class="input-group">
+              <label for="aiPrompt">Digite seu prompt:</label>
+              <textarea id="aiPrompt" placeholder="Ex: Crie um poema sobre tecnologia."></textarea>
+            </div>
+            <button onclick="sendAIPrompt()">Enviar para IA</button>
+            <div id="aiResult" class="result-box">A resposta da IA aparecerá aqui...</div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 
   <script>
-    // Função auxiliar para exibir resultados (generalizada)
-    const showResult = (elementId, data, isUuid = false) => {
+    // Função auxiliar para exibir resultados
+    const showResult = (elementId, data) => {
         const resultDiv = document.getElementById(elementId);
         resultDiv.innerHTML = ''; // Limpa o conteúdo anterior
 
@@ -54,8 +121,8 @@
                  resultDiv.innerHTML += `<p style="color: #ffbaba; font-size: 0.9em;">Detalhes: ${JSON.stringify(data.details)}</p>`;
             }
         } else {
-            if (isUuid) {
-                // Exibição para UUIDs
+             // Exibição para UUIDs
+            if (elementId === 'uuidResult') {
                 let html = `<h4>UUIDs Gerados:</h4>`;
                 html += `<ul>`;
                 data.uuids.forEach(uuid => {
@@ -63,8 +130,14 @@
                 });
                 html += `</ul>`;
                 resultDiv.innerHTML = html;
-            } else {
-                // Exibição para Contador de Palavras
+            } 
+            // Exibição para AI Tool
+            else if (elementId === 'aiResult') {
+                const aiResponse = data.ai_response && data.ai_response.content ? data.ai_response.content[0].text : 'Nenhuma resposta válida.';
+                resultDiv.innerHTML = `<h4>Resposta da IA:</h4><p>${aiResponse}</p>`;
+            }
+            // Exibição para Contador de Palavras
+            else {
                 const totalWords = data.total_words;
                 const wordCounts = data.word_counts;
 
@@ -81,7 +154,6 @@
         }
     };
 
-    // Função para contar palavras (existente)
     const countWords = async () => {
       const textInput = document.getElementById('textInput');
       const text = textInput.value;
@@ -112,7 +184,6 @@
       }
     };
 
-    // NOVO: Função para gerar UUIDs
     const generateUUIDs = async () => {
       const uuidCountInput = document.getElementById('uuidCount');
       const uuidFormatSelect = document.getElementById('uuidFormat');
@@ -121,7 +192,7 @@
       const format = uuidFormatSelect.value;
 
       if (isNaN(count) || count <= 0) {
-        showResult('uuidResult', { error: "Por favor, insira um número válido e positivo para a quantidade de UUIDs." }, true);
+        showResult('uuidResult', { error: "Por favor, insira um número válido e positivo para a quantidade de UUIDs." });
         return;
       }
 
@@ -134,22 +205,56 @@
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: response.statusText }));
-          showResult('uuidResult', { error: `Erro na API: ${response.status}`, details: errorData }, true);
+          showResult('uuidResult', { error: `Erro na API: ${response.status}`, details: errorData });
           return;
         }
 
         const data = await response.json();
-        showResult('uuidResult', data, true);
+        showResult('uuidResult', data);
       } catch (error) {
         console.error('Erro ao conectar ou processar a resposta da API de Gerador de UUID:', error);
-        showResult('uuidResult', { error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message }, true);
+        showResult('uuidResult', { error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message });
+      }
+    };
+
+    // NOVO: Função para enviar prompt para a IA
+    const sendAIPrompt = async () => {
+      const promptInput = document.getElementById('aiPrompt');
+      const prompt = promptInput.value;
+
+      if (!prompt.trim()) {
+        showResult('aiResult', { error: "Por favor, digite um prompt para a IA." });
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/ai-tool', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ prompt: prompt })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: response.statusText }));
+          showResult('aiResult', { error: `Erro na API: ${response.status}`, details: errorData });
+          return;
+        }
+
+        const data = await response.json();
+        showResult('aiResult', data);
+      } catch (error) {
+        console.error('Erro ao conectar ou processar a resposta da API de IA:', error);
+        showResult('aiResult', { error: "Não foi possível conectar ao servidor ou processar a resposta.", details: error.message });
       }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
         // Atualiza a porta e data de deploy
-        document.getElementById('serverPort').textContent = window.location.port || '80';
-        document.getElementById('deployDate').textContent = new Date().toLocaleString();
+        const serverPortSpan = document.getElementById('serverPort');
+        if (serverPortSpan) serverPortSpan.textContent = window.location.port || '3000';
+        
+        const deployDateSpan = document.getElementById('deployDate');
+        if (deployDateSpan) deployDateSpan.textContent = new Date().toLocaleString();
     });
   </script>
 </body>
