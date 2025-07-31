@@ -3,10 +3,9 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fetch from 'node-fetch'; // Importar node-fetch para fazer requisições HTTP
-import { v4 as uuidv4 } from 'uuid'; // Importar a função v4 do pacote uuid
+import fetch from 'node-fetch';
+import { v4 as uuidv4 } from 'uuid';
 
-// Recrie as variáveis __filename e __dirname para o escopo de Módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -27,7 +26,7 @@ function countWordFrequency(text: string): { [word: string]: number } {
   return frequency;
 }
 
-// NOVO: Função auxiliar para gerar UUIDs
+// Função auxiliar para gerar UUIDs
 interface GenerateUuidArgs {
   count?: number;
   format?: 'formatted' | 'raw';
@@ -43,7 +42,7 @@ function generateUuids(options: GenerateUuidArgs = {}): string[] {
   return uuids;
 }
 
-// Servir arquivos estáticos (interface web do contador de palavras)
+// Servir arquivos estáticos da interface web
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Health check
@@ -69,7 +68,7 @@ app.post('/api/word-count', (req: Request, res: Response) => {
   res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
 });
 
-// NOVO ENDPOINT: API para Gerar UUIDs
+// API: Gerar UUIDs
 app.post('/api/generate-uuid', (req: Request, res: Response) => {
   const { count, format } = req.body as GenerateUuidArgs;
 
@@ -97,9 +96,7 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Prompt inválido fornecido.' });
   }
 
-  // Obtenha a chave de API e o endpoint do Claude de variáveis de ambiente
   const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
-  // Este é um exemplo de endpoint. Verifique a documentação oficial do Claude para o endpoint correto.
   const CLAUDE_API_URL = process.env.CLAUDE_API_URL || 'https://api.anthropic.com/v1/messages';
 
   if (!CLAUDE_API_KEY) {
@@ -108,20 +105,15 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
   }
 
   try {
-    // Exemplo de como você faria a chamada para a API do Claude
-    // ATENÇÃO: Os detalhes do corpo da requisição (model, messages, etc.)
-    // dependem da versão da API do Claude que você está usando.
-    // Consulte a documentação oficial da Anthropic (Claude) para obter o formato correto.
     const claudeResponse = await fetch(CLAUDE_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': CLAUDE_API_KEY,
-        // Inclua outros headers necessários, como Anthropic-Version
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: "claude-3-opus-20240229", // Ou outro modelo, como "claude-3-sonnet-20240229"
+        model: "claude-3-opus-20240229",
         max_tokens: 1024,
         messages: [
           { role: "user", content: prompt }
@@ -139,7 +131,6 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
     }
 
     const data = await claudeResponse.json();
-    // A estrutura da resposta do Claude pode variar, ajuste conforme necessário
     res.json({ success: true, ai_response: data });
 
   } catch (error: any) {
@@ -148,7 +139,6 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
   }
 });
 
-// Iniciar servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`⚡ Servidor MCP (Contador de Palavras + IA + UUID) rodando na porta ${port}`);
