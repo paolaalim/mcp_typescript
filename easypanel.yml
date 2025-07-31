@@ -1,3 +1,4 @@
+# easypanel.yml
 name: mcp-server-typescript
 services:
   app:
@@ -9,6 +10,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - CLAUDE_API_KEY=sua-chave-de-api-aqui  
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
