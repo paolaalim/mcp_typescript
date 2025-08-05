@@ -53,8 +53,8 @@ body {
   margin-right: 20px;
 }
 .search-input {
-  width: 200px;
-  padding: 8px 12px;
+  width: 300px;
+  padding: 8px 8px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
 }
