@@ -12,9 +12,10 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
-// Função auxiliar para contar a frequência de palavras
+// Função auxiliar para contar a frequência de palavras (COM SUPORTE A ACENTOS)
 function countWordFrequency(text: string): { [word: string]: number } {
-  const words = text.toLowerCase().match(/\b\w+\b/g);
+
+  const words = text.toLowerCase().match(/\p{L}+/gu);
 
   const frequency: { [word: string]: number } = {};
 
