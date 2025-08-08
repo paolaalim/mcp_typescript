@@ -94,7 +94,7 @@ body {
   color: #ffffff;
 }
 .sidebar-search {
-  width: 100%;
+  width: 90%;
   padding: 8px 12px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
