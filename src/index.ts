@@ -12,13 +12,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
+// CENTRAL DE CONTROLE DE STATUS DAS FERRAMENTAS
+// Para alterar o status de uma ferramenta, mude o valor de 'online' para 'offline'.
+const toolStatus = {
+  'word-count': { status: 'online' },
+  'generate-uuid': { status: 'online' },
+  'ai-tool': { status: 'offline' } 
+};
+
 // Função auxiliar para contar a frequência de palavras (COM SUPORTE A ACENTOS)
 function countWordFrequency(text: string): { [word: string]: number } {
-
   const words = text.toLowerCase().match(/\p{L}+/gu);
-
   const frequency: { [word: string]: number } = {};
-
   if (words) {
     for (const word of words) {
       frequency[word] = (frequency[word] || 0) + 1;
@@ -56,30 +61,39 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
+app.get('/api/status', (req: Request, res: Response) => {
+  res.json(toolStatus);
+});
+
 // API: Contador de Frequência de Palavras
 app.post('/api/word-count', (req: Request, res: Response) => {
-  const { text } = req.body as { text: string };
+  // VERIFICAÇÃO DE STATUS
+  if (toolStatus['word-count'].status === 'offline') {
+    return res.status(503).json({ error: 'Serviço temporariamente indisponível.' });
+  }
 
+  const { text } = req.body as { text: string };
   if (!text || typeof text !== 'string') {
     return res.status(400).json({ error: 'Texto inválido fornecido.' });
   }
-
   const wordFrequency = countWordFrequency(text);
-
   res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
 });
 
 // API: Gerar UUIDs
 app.post('/api/generate-uuid', (req: Request, res: Response) => {
-  const { count, format } = req.body as GenerateUuidArgs;
+  // VERIFICAÇÃO DE STATUS
+  if (toolStatus['generate-uuid'].status === 'offline') {
+    return res.status(503).json({ error: 'Serviço temporariamente indisponível.' });
+  }
 
+  const { count, format } = req.body as GenerateUuidArgs;
   if (count !== undefined && (typeof count !== 'number' || count <= 0)) {
     return res.status(400).json({ error: 'Parâmetro "count" inválido. Deve ser um número inteiro positivo.' });
   }
   if (format !== undefined && format !== 'formatted' && format !== 'raw') {
     return res.status(400).json({ error: 'Parâmetro "format" inválido. Use "formatted" ou "raw".' });
   }
-
   try {
     const uuids = generateUuids({ count, format });
     res.json({ success: true, uuids });
@@ -91,8 +105,12 @@ app.post('/api/generate-uuid', (req: Request, res: Response) => {
 
 // Endpoint de IA: API para integração com IA (Claude)
 app.post('/api/ai-tool', async (req: Request, res: Response) => {
-  const { prompt } = req.body as { prompt: string };
+  // VERIFICAÇÃO DE STATUS
+  if (toolStatus['ai-tool'].status === 'offline') {
+    return res.status(503).json({ error: 'A ferramenta de IA está temporariamente offline.' });
+  }
 
+  const { prompt } = req.body as { prompt: string };
   if (!prompt || typeof prompt !== 'string') {
     return res.status(400).json({ error: 'Prompt inválido fornecido.' });
   }
@@ -116,9 +134,7 @@ app.post('/api/ai-tool', async (req: Request, res: Response) => {
       body: JSON.stringify({
         model: "claude-3-opus-20240229",
         max_tokens: 1024,
-        messages: [
-          { role: "user", content: prompt }
-        ]
+        messages: [{ role: "user", content: prompt }]
       })
     });
 
