@@ -158,6 +158,11 @@ body {
   color: white;
   background-color: var(--online-color);
 }
+}
+.status-offline {
+  color: white;
+  background-color: var(--offline-color);
+}
 .card-body p {
   font-size: 0.9em;
   color: var(--secondary-color);
