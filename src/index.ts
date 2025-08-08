@@ -17,7 +17,7 @@ app.use(express.json());
 const toolStatus = {
   'word-count': { status: 'online' },
   'generate-uuid': { status: 'online' },
-  'ai-tool': { status: 'online' } 
+  'ai-tool': { status: 'offline' } 
 };
 
 // Função auxiliar para contar a frequência de palavras (COM SUPORTE A ACENTOS)
