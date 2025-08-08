@@ -8,7 +8,7 @@
   --border-color: #dee2e6; /* Cor de borda cinza claro */
   --text-color: #343a40; /* Cor de texto escuro */
   --online-color: #28a745; /* Verde para status online */
-  --offline-color: #dc3545; /* Vermelho para status offline */
+  --offline-color: #dc3545; /* Vermelho para status offline (usado no botão) */
   --header-bg-color: #216a3a; /* Verde mais escuro para o topo */
 }
 
@@ -158,11 +158,16 @@ body {
   color: white;
   background-color: var(--online-color);
 }
-}
+/* ======================================= */
+/* ALTERAÇÃO FEITA AQUI                    */
+/* ======================================= */
 .status-offline {
-  color: white;
-  background-color: var(--offline-color);
+  color: var(--secondary-color); /* Texto cinza para combinar com o botão */
+  background-color: transparent; /* Fundo transparente */
+  border: 1px solid var(--border-color); /* Borda cinza claro */
 }
+/* ======================================= */
+
 .card-body p {
   font-size: 0.9em;
   color: var(--secondary-color);
@@ -206,4 +211,14 @@ button {
 }
 button:hover {
   background-color: #218838;
+}
+
+/* Também adicionei um estilo para o botão desabilitado que fizemos no script */
+button:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: var(--secondary-color);
 }
