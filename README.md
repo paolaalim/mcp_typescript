@@ -1,136 +1,105 @@
 # Servidor MCP TypeScript ✨
 
-Um servidor Model Context Protocol (MCP) completo em TypeScript com 6 ferramentas funcionais e interface web.
+Um servidor de backend em **TypeScript** que oferece um conjunto de ferramentas através de uma **API REST**, construído com **Node.js** e **Express**. O projeto inclui uma interface web interativa para utilizar as ferramentas e está configurado para **deploy fácil via Docker**.
 
 ## 🛠️ Ferramentas Disponíveis
 
-1. **Gerador de UUID** - Gera identificadores únicos
-2. **Calculadora Avançada** - Operações matemáticas complexas
-3. **Gerenciador de Tarefas** - CRUD completo de TODOs
-4. **Simulador de Clima** - Dados meteorológicos simulados
-5. **Gerador de QR Code** - Códigos QR personalizáveis
-6. **Validador de Dados** - Validação de emails, URLs, JSON, etc.
+Atualmente, o servidor oferece as seguintes ferramentas:
+
+1. **Contador de Palavras** → Analisa um texto e retorna a frequência de cada palavra.  
+2. **Gerador de UUID** → Gera identificadores únicos universalmente (UUID v4).  
+3. **Ferramenta de IA (Claude)** → Integra-se à API do Claude da Anthropic para responder a prompts de texto.
 
 ## ✨ Instalação e Uso
 
+### Requisitos
+- Node.js (versão 18 ou superior)  
+- npm  
+
 ### Instalação
+Clone o repositório e instale as dependências:
 ```bash
+git clone <url-do-seu-repositorio>
+cd <nome-do-repositorio>
 npm install
-npm run build
 ```
 
-### Modo MCP (Protocolo)
+Para compilar o código TypeScript e iniciar o servidor de produção:  
+> 💡 O comando `postinstall` já executa o build automaticamente após `npm install`
 ```bash
 npm start
-# ou
-node dist/index.js
 ```
+O servidor estará rodando em [http://localhost:3000](http://localhost:3000).
 
-### Modo Web (Interface)
-```bash
-node dist/index.js web
-```
-
-### Desenvolvimento
+Para rodar o servidor em modo de desenvolvimento com recarregamento automático (usando `tsx`):
 ```bash
 npm run dev
 ```
 
-### Testes
-```bash
-npm run test
-```
-
 ## 🐳 Deploy no EasyPanel
 
-1. Faça upload do código para um repositório Git
-2. No EasyPanel, crie uma nova aplicação
-3. Configure o source como seu repositório
-4. O EasyPanel detectará automaticamente o Dockerfile
-5. A aplicação ficará disponível na porta 3000
+Este projeto está pronto para deploy usando **Docker**. O arquivo `easypanel.yml` já está configurado.  
+1. Faça o push do seu código para um repositório Git (GitHub, GitLab, etc.).  
+2. No seu painel do EasyPanel, crie um novo serviço e aponte-o para o seu repositório.  
+3. O EasyPanel detectará o `Dockerfile` e construirá a imagem automaticamente.  
+4. Configure as variáveis de ambiente necessárias.  
 
-### Variáveis de Ambiente
-- `PORT`: Porta do servidor (padrão: 3000)
-- `NODE_ENV`: Ambiente de execução
+## ⚙️ Variáveis de Ambiente
 
-## 🔧 Configuração MCP
+Para rodar o projeto, as seguintes variáveis de ambiente são necessárias:
 
-Para usar com clientes MCP, adicione ao seu `mcp.json`:
+| Variável        | Descrição                                           | Padrão    |
+|-----------------|-----------------------------------------------------|-----------|
+| `PORT`          | Porta em que o servidor irá rodar                   | `3000`    |
+| `NODE_ENV`      | Ambiente da aplicação (`production`, `development`) | -         |
+| `CLAUDE_API_KEY`| Chave de API para o serviço Claude da Anthropic     | -         |
 
-```json
-{
-  "mcpServers": {
-    "typescript-server": {
-      "command": "node",
-      "args": ["dist/index.js"],
-      "cwd": "/caminho/para/o/projeto"
-    }
-  }
-}
+## 📡 Endpoints da API
+
+- **GET /** → Serve a interface web principal.  
+- **GET /health** → Verifica a saúde do serviço.  
+- **GET /api/status** → Retorna o status (online/offline) de cada ferramenta.  
+- **POST /api/word-count** → Recebe um texto e conta a frequência das palavras.  
+- **POST /api/generate-uuid** → Gera um ou mais UUIDs.  
+- **POST /api/ai-tool** → Envia um prompt para a IA do Claude.  
+
+## 🧪 Exemplos de Uso (via cURL)
+
+### Contar Palavras
+```bash
+curl -X POST http://localhost:3000/api/word-count \
+-H "Content-Type: application/json" \
+-d '{"text": "Olá mundo, olá a todos."}'
 ```
 
-## 📡 Endpoints
-
-- `GET /` - Interface web
-- `GET /health` - Status do servidor
-- `GET /api/todos` - Lista de tarefas
-
-## 🧪 Exemplos de Uso
-
-### Gerar UUID
-```javascript
-{
-  "tool": "generate_uuid",
-  "arguments": {
-    "count": 3,
-    "format": "formatted"
-  }
-}
+### Gerar UUIDs
+```bash
+curl -X POST http://localhost:3000/api/generate-uuid \
+-H "Content-Type: application/json" \
+-d '{"count": 2, "format": "raw"}'
 ```
 
-### Calculadora
-```javascript
-{
-  "tool": "calculator",
-  "arguments": {
-    "operation": "factorial",
-    "a": 5
-  }
-}
-```
-
-### Gerenciar Tarefas
-```javascript
-{
-  "tool": "todo_manager",
-  "arguments": {
-    "action": "create",
-    "text": "Implementar nova feature",
-    "priority": "high"
-  }
-}
+### Usar Ferramenta de IA
+```bash
+curl -X POST http://localhost:3000/api/ai-tool \
+-H "Content-Type: application/json" \
+-d '{"prompt": "Crie um poema sobre programação."}'
 ```
 
 ## 📦 Estrutura do Projeto
-
 ```
-src/
-├── index.ts          # Servidor principal
-├── test.ts           # Testes das ferramentas
-package.json          # Dependências
-tsconfig.json         # Configuração TypeScript
-Dockerfile           # Container Docker
-easypanel.yml        # Configuração EasyPanel
+.
+├── Dockerfile          # Configuração do container Docker
+├── easypanel.yml       # Configuração para deploy no EasyPanel
+├── package.json        # Dependências e scripts do projeto
+├── tsconfig.json       # Configurações do compilador TypeScript
+├── public/             # Arquivos da interface web
+│   ├── index.html      # Estrutura da página
+│   ├── style.css       # Estilos visuais
+│   └── script.js       # Lógica do lado do cliente
+└── src/                # Código-fonte do servidor
+    └── index.ts        # Arquivo principal do servidor Express
 ```
 
 ## 🤝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/nova-ferramenta`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova ferramenta'`)
-4. Push para a branch (`git push origin feature/nova-ferramenta`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-MIT License - veja o arquivo LICENSE para detalhes.
+Sinta-se à vontade para abrir *issues* e enviar *pull requests*. Toda contribuição é bem-vinda!
