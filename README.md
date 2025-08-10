@@ -1,4 +1,4 @@
-# Servidor MCP TypeScript ✨
+# Servidor MCP TypeScript 
 
 Um servidor de backend em **TypeScript** que oferece um conjunto de ferramentas através de uma **API REST**, construído com **Node.js** e **Express**. O projeto inclui uma interface web interativa para utilizar as ferramentas e está configurado para **deploy fácil via Docker**.
 
@@ -10,7 +10,7 @@ Atualmente, o servidor oferece as seguintes ferramentas:
 2. **Gerador de UUID** → Gera identificadores únicos universalmente (UUID v4).  
 3. **Ferramenta de IA (Claude)** → Integra-se à API do Claude da Anthropic para responder a prompts de texto.
 
-## ✨ Instalação e Uso
+## Instalação e Uso
 
 ### Requisitos
 - Node.js (versão 18 ou superior)  
@@ -25,7 +25,7 @@ npm install
 ```
 
 Para compilar o código TypeScript e iniciar o servidor de produção:  
-> 💡 O comando `postinstall` já executa o build automaticamente após `npm install`
+> O comando `postinstall` já executa o build automaticamente após `npm install`
 ```bash
 npm start
 ```
@@ -63,28 +63,6 @@ Para rodar o projeto, as seguintes variáveis de ambiente são necessárias:
 - **POST /api/generate-uuid** → Gera um ou mais UUIDs.  
 - **POST /api/ai-tool** → Envia um prompt para a IA do Claude.  
 
-## 🧪 Exemplos de Uso (via cURL)
-
-### Contar Palavras
-```bash
-curl -X POST http://localhost:3000/api/word-count \
--H "Content-Type: application/json" \
--d '{"text": "Olá mundo, olá a todos."}'
-```
-
-### Gerar UUIDs
-```bash
-curl -X POST http://localhost:3000/api/generate-uuid \
--H "Content-Type: application/json" \
--d '{"count": 2, "format": "raw"}'
-```
-
-### Usar Ferramenta de IA
-```bash
-curl -X POST http://localhost:3000/api/ai-tool \
--H "Content-Type: application/json" \
--d '{"prompt": "Crie um poema sobre programação."}'
-```
 
 ## 📦 Estrutura do Projeto
 ```
