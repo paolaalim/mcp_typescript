@@ -82,5 +82,5 @@ Para rodar o projeto, as seguintes variáveis de ambiente são necessárias:
 ## 🤝 Contribuindo
 Sinta-se à vontade para abrir *issues* e enviar *pull requests*. Toda contribuição é bem-vinda!
 
-📄 Licença
+## 📄 Licença
 Este projeto é licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
