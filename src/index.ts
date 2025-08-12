@@ -1,16 +1,37 @@
 // src/index.ts
-
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
 const app = express();
 app.use(express.json());
+
+//definir schema
+const wordCountSchema = z.object({
+  text: z.string().min(1, { message: "O campo de texto não pode estar vazio." })
+});
+
+app.post('/api/word-count', (req: Request, res: Response) => {
+  const result = wordCountSchema.safeParse(req.body);
+
+  if (!result.success) {
+    // Retorna os erros de validação detalhados pelo Zod
+    return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+  }
+
+  // Para usar `result.data.text` com segurança
+  const { text } = result.data;
+  const wordFrequency = countWordFrequency(text);
+  res.json({ text_input: text, word_counts: wordFrequency, total_words: Object.values(wordFrequency).reduce((sum: number, count: number) => sum + count, 0) });
+});
+
 
 // CENTRAL DE CONTROLE DE STATUS DAS FERRAMENTAS
 // Para alterar o status de uma ferramenta, mude o valor de 'online' para 'offline'.
