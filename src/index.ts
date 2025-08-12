@@ -5,13 +5,22 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
+import apiRoutes from './routes/apiRoutes';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const app = express();
+app.use(express.json());
 
 const app = express();
 app.use(express.json());
+app.use(express.static(...)); // Servir arquivos estáticos
+
+app.get('/health', ...);
+app.use('/api', apiRoutes); // Usar o módulo de rotas
+
+app.listen(...);
 
 //definir schema
 const wordCountSchema = z.object({
