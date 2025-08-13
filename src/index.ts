@@ -4,11 +4,10 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Importa a configuração validada e as rotas da API
-// ALERTA: Alterar .js para .ts
-import { config } from './config.ts';
-import apiRoutes from './routes/apiRoutes.ts';
-// ...
+// Use .js para as importações
+import { config } from './config.js';
+import apiRoutes from './routes/apiRoutes.js';
+
 
 // Configuração para obter __dirname em módulos ES
 const __filename = fileURLToPath(import.meta.url);
