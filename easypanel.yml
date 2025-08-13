@@ -5,7 +5,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - CLAUDE_API_KEY= #sua_chave_real_aqui  
+      - CLAUDE_API_KEY=sua_chave_real_aqui  
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
