@@ -4,11 +4,13 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import fetch from 'node-fetch';
 
+// Importa a lógica de negócio dos arquivos de ferramentas
+// ALERTA: Alterar .js para .ts
 import { countWordFrequency } from '../tools/wordCounter.ts';
 import { generateUuids } from '../tools/uuidGenerator.ts';
 import { config } from '../config.ts';
+// ...
 
-// ... (outros schemas e handlers) ...
 
 export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
