@@ -1,7 +1,11 @@
+// src/routes/apiRoutes.ts
+
 import { Router, Request, Response, NextFunction } from 'express';
+// ALERTA: Alterar .ts para .js
 import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.js';
 
 const router = Router();
+// ...
 
 // Middleware para checar o status da ferramenta
 const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') => {
