@@ -1,11 +1,12 @@
 // src/routes/apiRoutes.ts
 
 import { Router, Request, Response, NextFunction } from 'express';
-// ALERTA: Alterar .js para .ts
-import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.ts';
+// Use .js para as importações
+import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.js';
 
 const router = Router();
-// ...
+
+// ... (todo o código do router) ...
 
 
 // Middleware para checar o status da ferramenta
