@@ -5,9 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Importa a configuração validada e as rotas da API
-// ALERTA: Alterar .ts para .js
-import { config } from './config.js';
-import apiRoutes from './routes/apiRoutes.js';
+// ALERTA: Alterar .js para .ts
+import { config } from './config.ts';
+import apiRoutes from './routes/apiRoutes.ts';
 // ...
 
 // Configuração para obter __dirname em módulos ES
