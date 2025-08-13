@@ -5,10 +5,10 @@ import { z } from 'zod';
 import fetch from 'node-fetch';
 
 // Importa a lógica de negócio dos arquivos de ferramentas
-import { countWordFrequency } from '../tools/wordCounter.js';
-import { generateUuids } from '../tools/uuidGenerator.js';
+import { countWordFrequency } from '../tools/wordCounter.ts';
+import { generateUuids } from '../tools/uuidGenerator.ts';
 // Importa a configuração validada
-import { config } from '../config.js';
+import { config } from '../config.ts';
 
 // Schemas de validação com Zod para cada rota
 const wordCountSchema = z.object({
@@ -56,6 +56,12 @@ export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+  }
+
+  // ALTERAÇÃO AQUI: Verifique se a chave de API está disponível antes de usar.
+  if (!config.CLAUDE_API_KEY) {
+      // Se a chave não estiver configurada, retorne um erro 503 com uma mensagem clara.
+      return res.status(503).json({ error: "Serviço de IA indisponível. A chave de API não foi configurada." });
   }
 
   try {
