@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolController.ts';
+import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.ts';
 
 const router = Router();
 const router = Router();
