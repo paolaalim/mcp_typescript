@@ -4,12 +4,12 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import fetch from 'node-fetch';
 
-// Importa a lógica de negócio dos arquivos de ferramentas
-// ALERTA: Alterar .js para .ts
-import { countWordFrequency } from '../tools/wordCounter.ts';
-import { generateUuids } from '../tools/uuidGenerator.ts';
-import { config } from '../config.ts';
-// ...
+// Use .js para as importações
+import { countWordFrequency } from '../tools/wordCounter.js';
+import { generateUuids } from '../tools/uuidGenerator.js';
+import { config } from '../config.js';
+
+// ... (todo o código do controller) ...
 
 
 export const handleAiTool = async (req: Request, res: Response) => {
