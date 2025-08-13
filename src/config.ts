@@ -12,9 +12,10 @@ const envSchema = z.object({
   // Se não for definida, assume o valor padrão 3000.
   PORT: z.coerce.number().default(3000),
 
-  // Garante que CLAUDE_API_KEY seja uma string com pelo menos 1 caractere.
-  // Se não for fornecida, o servidor irá falhar ao iniciar com uma mensagem clara.
-  CLAUDE_API_KEY: z.string().min(1, { message: "CLAUDE_API_KEY é obrigatória e não foi encontrada no ambiente." }),
+  // ALTERAÇÃO AQUI: Torna a CLAUDE_API_KEY opcional
+  // Se não for fornecida, o valor padrão será uma string vazia (''),
+  // o que permite que o servidor inicie sem a chave.
+  CLAUDE_API_KEY: z.string().optional().default(''),
   
   // Define a URL da API do Claude, com um valor padrão.
   CLAUDE_API_URL: z.string().url().default('https://api.anthropic.com/v1/messages'),
