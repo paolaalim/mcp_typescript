@@ -2,15 +2,10 @@
 name: mcp-server-typescript
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - CLAUDE_API_KEY=sua-chave-de-api-aqui  
+      - CLAUDE_API_KEY=chave-de-api-aqui  
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
