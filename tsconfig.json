@@ -12,7 +12,8 @@
     "declaration": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true  
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
