@@ -5,10 +5,12 @@ import { z } from 'zod';
 import fetch from 'node-fetch';
 
 // Importa a lógica de negócio dos arquivos de ferramentas
-import { countWordFrequency } from '../tools/wordCounter.ts';
-import { generateUuids } from '../tools/uuidGenerator.ts';
+// ALERTA: Alterar .ts para .js
+import { countWordFrequency } from '../tools/wordCounter.js';
+import { generateUuids } from '../tools/uuidGenerator.js';
 // Importa a configuração validada
-import { config } from '../config.ts';
+import { config } from '../config.js';
+
 
 // Schemas de validação com Zod para cada rota
 const wordCountSchema = z.object({
