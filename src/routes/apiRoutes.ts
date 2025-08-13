@@ -1,7 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.ts';
+import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.js';
 
-const router = Router();
 const router = Router();
 
 // Middleware para checar o status da ferramenta
