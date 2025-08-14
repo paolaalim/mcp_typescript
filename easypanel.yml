@@ -2,6 +2,8 @@ name: mcp-server-typescript
 services:
   app:
     environment:
+      - PORT=3000
+      - NODE_ENV=production
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
