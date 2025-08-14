@@ -4,13 +4,15 @@
   "description": "Servidor MCP em TypeScript com ferramentas funcionais",
   "type": "module",
   "main": "dist/index.js",
-  "scripts": {
+  
+"scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:debug": "node --inspect-brk=0.0.0.0:9229 dist/index.js", // <-- Adicione esta linha
     "dev": "tsx src/index.ts",
     "test": "tsx src/test.ts",
     "postinstall": "npm run build"
-  },
+},
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "express": "^4.18.2",
