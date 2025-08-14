@@ -125,10 +125,13 @@ const sendAIPrompt = async () => {
 const updateUIWithStatus = (statuses) => {
   for (const toolId in statuses) {
     const isOnline = statuses[toolId].status === 'online';
-    const badge = document.getElementById(`status-badge-${toolId}`);
-    const text = document.getElementById(`status-text-${toolId}`);
     const button = document.querySelector(`#card-${toolId} button`);
-
+    if (badge && text && button) {
+      button.disabled = !isOnline;
+     
+    }
+  }
+};
     if (badge && text && button) {
       badge.textContent = isOnline ? 'Online' : 'Offline';
       badge.classList.toggle('status-online', isOnline);
