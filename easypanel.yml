@@ -1,19 +1,13 @@
-# easypanel.yml
 name: mcp-server-typescript
 services:
   app:
-  
     environment:
-      - NODE_ENV=production
-      # Mantenha a porta para o docker e o servidor
-      - PORT=3000 
-      - CLAUDE_API_KEY=dummy_key_for_testing
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s 
     restart: unless-stopped
     deploy:
       resources:
@@ -23,6 +17,5 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-
-    # Adicione esta linha para garantir que o comando de inicialização seja executado
+          
     command: npm start
