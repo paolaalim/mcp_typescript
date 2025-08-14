@@ -20,11 +20,12 @@ const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') =
   };
 };
 
-router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
+// router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
+
 
 // Define as rotas da API, aplicando o middleware de status em cada uma
 router.post('/word-count', checkToolStatus('word-count'), handleWordCount);
 router.post('/generate-uuid', checkToolStatus('generate-uuid'), handleGenerateUuid);
-router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
+router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool); // Mantenha esta linha
 
 export default router;
