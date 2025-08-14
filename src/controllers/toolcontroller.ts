@@ -1,16 +1,16 @@
-// src/controllers/toolcontroller.ts
+
 
 import { Request, Response } from 'express';
-import { z } from 'zod';
+import { z } from 'zod'; 
 import fetch from 'node-fetch';
-
-// Use .js para as importações
 import { countWordFrequency } from '../tools/wordCounter.js';
 import { generateUuids } from '../tools/uuidGenerator.js';
 import { config } from '../config.js';
 
-// ... (todo o código do controller) ...
-
+// validar o corpo da requisição da IA
+const aiToolSchema = z.object({
+  prompt: z.string().min(1, "O prompt não pode estar vazio."),
+});
 
 export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
@@ -18,7 +18,6 @@ export const handleAiTool = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
   }
 
-  // ALTERAÇÃO AQUI: Verifique se a chave de API está disponível.
   if (!config.CLAUDE_API_KEY) {
     return res.status(503).json({ error: "Serviço de IA indisponível. A chave de API não foi configurada." });
   }
