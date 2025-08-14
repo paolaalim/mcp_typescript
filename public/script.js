@@ -125,25 +125,23 @@ const sendAIPrompt = async () => {
 const updateUIWithStatus = (statuses) => {
   for (const toolId in statuses) {
     const isOnline = statuses[toolId].status === 'online';
-    const button = document.querySelector(`#card-${toolId} button`);
-    if (badge && text && button) {
-      button.disabled = !isOnline;
-     
-    }
-  }
-};
+    const card = document.getElementById(`card-${toolId}`);
+    if (!card) continue;
+
+    const badge = card.querySelector('.card-status');
+    const text = card.querySelector('p > span');
+    const button = card.querySelector('button');
+
     if (badge && text && button) {
       badge.textContent = isOnline ? 'Online' : 'Offline';
       badge.classList.toggle('status-online', isOnline);
       badge.classList.toggle('status-offline', !isOnline);
 
-      text.textContent = isOnline ? 'Online' : 'Offline';
+      if (text.id === `status-text-${toolId}`) {
+          text.textContent = isOnline ? 'Online' : 'Offline';
+      }
 
       button.disabled = !isOnline;
-      if (!isOnline) {
-        button.style.backgroundColor = '#6c757d';
-        button.style.cursor = 'not-allowed';
-      }
     }
   }
 };
