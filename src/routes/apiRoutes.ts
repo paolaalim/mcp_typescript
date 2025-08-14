@@ -6,8 +6,7 @@ import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controller
 
 const router = Router();
 
-// ... (todo o código do router) ...
-
+// todo o código do router
 
 // Middleware para checar o status da ferramenta
 const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') => {
@@ -20,6 +19,8 @@ const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') =
     }
   };
 };
+
+router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
 
 // Define as rotas da API, aplicando o middleware de status em cada uma
 router.post('/word-count', checkToolStatus('word-count'), handleWordCount);
