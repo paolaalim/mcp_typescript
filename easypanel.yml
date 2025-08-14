@@ -2,10 +2,12 @@
 name: mcp-server-typescript
 services:
   app:
+  
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      - CLAUDE_API_KEY= dummy_key_for_testing
+      # Mantenha a porta para o docker e o servidor
+      - PORT=3000 
+      - CLAUDE_API_KEY=dummy_key_for_testing
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
@@ -21,3 +23,6 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+
+    # Adicione esta linha para garantir que o comando de inicialização seja executado
+    command: npm start
