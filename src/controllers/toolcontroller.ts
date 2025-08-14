@@ -1,16 +1,43 @@
-
-
 import { Request, Response } from 'express';
-import { z } from 'zod'; 
+import { z } from 'zod';
 import fetch from 'node-fetch';
 import { countWordFrequency } from '../tools/wordCounter.js';
 import { generateUuids } from '../tools/uuidGenerator.js';
 import { config } from '../config.js';
 
-// validar o corpo da requisição da IA
-const aiToolSchema = z.object({
-  prompt: z.string().min(1, "O prompt não pode estar vazio."),
+// Definição dos esquemas de validação
+const wordCountSchema = z.object({
+    text: z.string().min(1, "O texto não pode estar vazio."),
 });
+
+const uuidSchema = z.object({
+    count: z.coerce.number().min(1).max(100).default(1),
+    format: z.enum(['formatted', 'raw']).default('formatted'),
+});
+
+const aiToolSchema = z.object({
+    prompt: z.string().min(1, "O prompt não pode estar vazio."),
+});
+
+
+export const handleWordCount = (req: Request, res: Response) => {
+    const result = wordCountSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+    }
+    const wordCounts = countWordFrequency(result.data.text);
+    const totalWords = Object.values(wordCounts).reduce((sum, count) => sum + count, 0);
+    res.json({ success: true, word_counts: wordCounts, total_words: totalWords });
+};
+
+export const handleGenerateUuid = (req: Request, res: Response) => {
+    const result = uuidSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+    }
+    const uuids = generateUuids(result.data);
+    res.json({ success: true, uuids: uuids });
+};
 
 export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
