@@ -1,12 +1,10 @@
-// public/script.js
-
 // Armazena o status das ferramentas que será buscado do servidor
 let serverToolStatus = {};
 
 // Função auxiliar para exibir resultados
 const showResult = (elementId, data) => {
     const resultDiv = document.getElementById(elementId);
-    resultDiv.innerHTML = ''; // Limpa o conteúdo anterior
+    resultDiv.innerHTML = ''; 
 
     if (data.error) {
         resultDiv.innerHTML = `<p style="color: #ffbaba;"><strong>Erro:</strong> ${data.error}</p>`;
@@ -38,7 +36,6 @@ const showResult = (elementId, data) => {
 };
 
 const countWords = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR
   if (serverToolStatus['word-count']?.status !== 'online') {
     showResult('wordCountResult', { error: "A ferramenta Contador de Palavras está offline." });
     return;
@@ -66,7 +63,6 @@ const countWords = async () => {
 };
 
 const generateUUIDs = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR
   if (serverToolStatus['generate-uuid']?.status !== 'online') {
     showResult('uuidResult', { error: "A ferramenta Gerador de UUID está offline." });
     return;
@@ -95,7 +91,6 @@ const generateUUIDs = async () => {
 };
 
 const sendAIPrompt = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR
   if (serverToolStatus['ai-tool']?.status !== 'online') {
     showResult('aiResult', { error: "A ferramenta de IA está temporariamente offline." });
     return;
