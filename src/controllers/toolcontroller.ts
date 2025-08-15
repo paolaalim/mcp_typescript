@@ -19,7 +19,6 @@ const aiToolSchema = z.object({
     prompt: z.string().min(1, "O prompt não pode estar vazio."),
 });
 
-
 export const handleWordCount = (req: Request, res: Response) => {
     const result = wordCountSchema.safeParse(req.body);
     if (!result.success) {
