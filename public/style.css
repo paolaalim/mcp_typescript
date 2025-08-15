@@ -1,5 +1,3 @@
-/* public/style.css */
-
 :root {
   --primary-color: #28a745; /* Verde vibrante */
   --secondary-color: #6c757d; /* Cinza para textos secundários */
@@ -41,7 +39,7 @@ body {
 }
 .logo-text {
   font-weight: bold;
-  color: white; /* Cor do texto do logo */
+  color: white; 
 }
 .topbar-right {
   display: flex;
