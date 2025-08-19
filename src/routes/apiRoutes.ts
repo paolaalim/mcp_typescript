@@ -1,23 +1,77 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.js';
+import express, { Request, Response } from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { config } from './config.js';
+import apiRoutes from './routes/apiRoutes.js';
 
-const router = Router();
+const __filename = fileURLToPath(import.meta.url);
 
-// Middleware para checar o status da ferramenta
-const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const toolStatus = req.app.get('toolStatus'); 
-    if (toolStatus[toolName]?.status === 'online') {
-      next();
-    } else {
-      res.status(503).json({ error: `Serviço '${toolName}' temporariamente indisponível.` });
-    }
-  };
+const __dirname = path.dirname(__filename);
+
+const app = express();
+
+
+// -- Configuração do Servidor --
+
+app.use(express.json()); // Middleware para interpretar JSON
+
+app.use(express.static(path.join(__dirname, '../public'))); // Servir arquivos estáticos
+
+// Central de Controle de Status das Ferramentas
+
+const toolStatus = {
+
+  'word-count': { status: 'online' },
+
+  'generate-uuid': { status: 'online' },
+
+  'ai-tool': { status: 'offline' }
+
 };
 
-// Define as rotas da API, aplicando o middleware de status em cada uma
-router.post('/word-count', checkToolStatus('word-count'), handleWordCount);
-router.post('/generate-uuid', checkToolStatus('generate-uuid'), handleGenerateUuid);
-router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool); // Mantenha esta linha
+// Disponibiliza o status para toda a aplicação (para o middleware de rotas acessar)
 
-export default router;
+app.set('toolStatus', toolStatus);
+// -- Rotas da Aplicação --
+
+
+// Rota de Health Check para monitoramento
+
+app.get('/health', (req: Request, res: Response) => {
+
+  res.json({
+
+    status: 'healthy',
+
+    timestamp: new Date().toISOString(),
+
+    uptime: process.uptime()
+
+  });
+
+});
+
+
+// Rota para a interface web obter o status das ferramentas
+
+app.get('/api/status', (req: Request, res: Response) => {
+
+  res.json(toolStatus);
+
+});
+
+// Conecta todas as rotas da API sob o prefixo /api
+app.use('/api', apiRoutes);
+
+// -- Inicialização do Servidor --
+app.listen(config.PORT, () => {
+
+  console.log('-------------------------------------------');
+
+  console.log(`⚡ Servidor MCP rodando na porta ${config.PORT}`);
+
+  console.log(`🌐 Interface: http://localhost:${config.PORT}/`);
+
+  console.log('-------------------------------------------');
+
+});
