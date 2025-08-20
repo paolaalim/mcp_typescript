@@ -1,51 +1,59 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import fetch from 'node-fetch';
+
+// Importa a lógica de negócio dos arquivos de ferramentas
 import { countWordFrequency } from '../tools/wordCounter.js';
 import { generateUuids } from '../tools/uuidGenerator.js';
+// Importa a configuração validada
 import { config } from '../config.js';
 
-// Definição dos esquemas de validação
+// Schemas de validação com Zod para cada rota
 const wordCountSchema = z.object({
-    text: z.string().min(1, "O texto não pode estar vazio."),
+  text: z.string().min(1, "O campo de texto não pode estar vazio.")
 });
 
-const uuidSchema = z.object({
-    count: z.coerce.number().min(1).max(100).default(1),
-    format: z.enum(['formatted', 'raw']).default('formatted'),
+const generateUuidSchema = z.object({
+  count: z.number().int().positive().optional().default(1),
+  format: z.enum(['formatted', 'raw']).optional().default('formatted'),
 });
 
 const aiToolSchema = z.object({
-    prompt: z.string().min(1, "O prompt não pode estar vazio."),
+  prompt: z.string().min(1, "O prompt não pode estar vazio.")
 });
 
+// -- Handlers do Controller --
+
 export const handleWordCount = (req: Request, res: Response) => {
-    const result = wordCountSchema.safeParse(req.body);
-    if (!result.success) {
-        return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
-    }
-    const wordCounts = countWordFrequency(result.data.text);
-    const totalWords = Object.values(wordCounts).reduce((sum, count) => sum + count, 0);
-    res.json({ success: true, word_counts: wordCounts, total_words: totalWords });
+  const result = wordCountSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+  }
+
+  const wordFrequency = countWordFrequency(result.data.text);
+  const totalWords = Object.values(wordFrequency).reduce((sum, count) => sum + count, 0);
+
+  res.json({
+    text_input: result.data.text,
+    word_counts: wordFrequency,
+    total_words: totalWords
+  });
 };
 
 export const handleGenerateUuid = (req: Request, res: Response) => {
-    const result = uuidSchema.safeParse(req.body);
-    if (!result.success) {
-        return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
-    }
-    const uuids = generateUuids(result.data);
-    res.json({ success: true, uuids: uuids });
+  const result = generateUuidSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
+  }
+
+  const uuids = generateUuids(result.data);
+  res.json({ success: true, uuids });
 };
 
 export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ error: "Dados inválidos.", issues: result.error.flatten() });
-  }
-
-  if (!config.CLAUDE_API_KEY) {
-    return res.status(503).json({ error: "Serviço de IA indisponível. A chave de API não foi configurada." });
   }
 
   try {
