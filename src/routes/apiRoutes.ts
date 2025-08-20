@@ -10,5 +10,4 @@ const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') =
   };
 };
 
-// ...
 router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
