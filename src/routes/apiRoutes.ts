@@ -1,3 +1,9 @@
+import { Router, Request, Response, NextFunction } from 'express';
+// Use .js para as importações
+import { handleWordCount, handleGenerateUuid, handleAiTool } from '../controllers/toolcontroller.js';
+
+const router = Router();
+
 // Middleware para checar o status da ferramenta
 const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -10,4 +16,9 @@ const checkToolStatus = (toolName: 'word-count' | 'generate-uuid' | 'ai-tool') =
   };
 };
 
-router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool);
+// Define as rotas da API, aplicando o middleware de status em cada uma
+router.post('/word-count', checkToolStatus('word-count'), handleWordCount);
+router.post('/generate-uuid', checkToolStatus('generate-uuid'), handleGenerateUuid);
+router.post('/ai-tool', checkToolStatus('ai-tool'), handleAiTool); // Mantenha esta linha
+
+export default router;
