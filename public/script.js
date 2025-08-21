@@ -1,5 +1,3 @@
-// public/script.js
-
 // Variável para armazenar o status das ferramentas que será buscado do servidor
 let serverToolStatus = {};
 
