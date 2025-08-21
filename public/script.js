@@ -1,57 +1,19 @@
-// Armazena o status das ferramentas que será buscado do servidor
+// public/script.js
+
+// Variável para armazenar o status das ferramentas que será buscado do servidor
 let serverToolStatus = {};
 
 // Função auxiliar para exibir resultados
 const showResult = (elementId, data) => {
     const resultDiv = document.getElementById(elementId);
-    resultDiv.innerHTML = ''; 
-
-    if (data.error) {
-        resultDiv.innerHTML = `<p style="color: #ffbaba;"><strong>Erro:</strong> ${data.error}</p>`;
-        if(data.details) {
-             resultDiv.innerHTML += `<p style="color: #ffbaba; font-size: 0.9em;">Detalhes: ${JSON.stringify(data.details)}</p>`;
-        }
-    } else {
-        if (elementId === 'uuidResult') {
-            let html = `<h4>UUIDs Gerados:</h4><ul>`;
-            data.uuids.forEach(uuid => { html += `<li><code>${uuid}</code></li>`; });
-            html += `</ul>`;
-            resultDiv.innerHTML = html;
-        }
-        else if (elementId === 'aiResult') {
-            const aiResponse = data.ai_response && data.ai_response.content ? data.ai_response.content[0].text : 'Nenhuma resposta válida.';
-            resultDiv.innerHTML = `<h4>Resposta da IA:</h4><p>${aiResponse}</p>`;
-        }
-        else {
-            const totalWords = data.total_words;
-            const wordCounts = data.word_counts;
-            let html = `<h4>Análise Completa:</h4>`;
-            html += `<p><strong>Total de Palavras Únicas:</strong> ${Object.keys(wordCounts).length}</p>`;
-            html += `<p><strong>Total de Palavras (Geral):</strong> ${totalWords}</p><ul>`;
-            for (const word in wordCounts) { html += `<li><strong>${word}:</strong> ${wordCounts[word]}</li>`; }
-            html += `</ul>`;
-            resultDiv.innerHTML = html;
-        }
-    }
-};
-
-// Variável global para armazenar o status das ferramentas.
-// É preenchida com dados do endpoint /api/status.
-let serverToolStatus = {};
-
-//Função genérica para exibir resultados na interface.
-const showResult = (elementId, data) => {
-    const resultDiv = document.getElementById(elementId);
     resultDiv.innerHTML = ''; // Limpa o conteúdo anterior
 
     if (data.error) {
-        // Se a resposta contiver um erro, exibe a mensagem de erro.
         resultDiv.innerHTML = `<p style="color: #ffbaba;"><strong>Erro:</strong> ${data.error}</p>`;
         if(data.details) {
              resultDiv.innerHTML += `<p style="color: #ffbaba; font-size: 0.9em;">Detalhes: ${JSON.stringify(data.details)}</p>`;
         }
     } else {
-        // Exibe o resultado com base no ID do elemento.
         if (elementId === 'uuidResult') {
             let html = `<h4>UUIDs Gerados:</h4><ul>`;
             data.uuids.forEach(uuid => { html += `<li><code>${uuid}</code></li>`; });
@@ -59,12 +21,10 @@ const showResult = (elementId, data) => {
             resultDiv.innerHTML = html;
         }
         else if (elementId === 'aiResult') {
-            // Exibição para a Ferramenta de IA.
             const aiResponse = data.ai_response && data.ai_response.content ? data.ai_response.content[0].text : 'Nenhuma resposta válida.';
             resultDiv.innerHTML = `<h4>Resposta da IA:</h4><p>${aiResponse}</p>`;
         }
         else {
-            // Exibição para o Contador de Palavras.
             const totalWords = data.total_words;
             const wordCounts = data.word_counts;
             let html = `<h4>Análise Completa:</h4>`;
@@ -77,12 +37,7 @@ const showResult = (elementId, data) => {
     }
 };
 
-/*
- Handler para a ferramenta de Contador de Palavras.
- Envia o texto para o servidor e exibe o resultado.
- */
 const countWords = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR a requisição.
   if (serverToolStatus['word-count']?.status !== 'online') {
     showResult('wordCountResult', { error: "A ferramenta Contador de Palavras está offline." });
     return;
@@ -109,12 +64,7 @@ const countWords = async () => {
   }
 };
 
-/*
- Handler para a ferramenta de Gerador de UUID.
- Envia a configuração (quantidade e formato) para o servidor e exibe o resultado.
- */
 const generateUUIDs = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR a requisição.
   if (serverToolStatus['generate-uuid']?.status !== 'online') {
     showResult('uuidResult', { error: "A ferramenta Gerador de UUID está offline." });
     return;
@@ -142,12 +92,7 @@ const generateUUIDs = async () => {
   }
 };
 
-/*
- Handler para a ferramenta de IA.
- Envia o prompt para o servidor e exibe a resposta da IA.
- */
 const sendAIPrompt = async () => {
-  // VERIFICA STATUS ANTES DE ENVIAR a requisição.
   if (serverToolStatus['ai-tool']?.status !== 'online') {
     showResult('aiResult', { error: "A ferramenta de IA está temporariamente offline." });
     return;
@@ -174,11 +119,6 @@ const sendAIPrompt = async () => {
   }
 };
 
-/*
- Atualiza a interface do usuário com base no status das ferramentas.
- Muda o texto, a cor do badge de status e habilita/desabilita os botões.
- @param {object} statuses - Objeto com o status de cada ferramenta.
- */
 const updateUIWithStatus = (statuses) => {
   for (const toolId in statuses) {
     const isOnline = statuses[toolId].status === 'online';
@@ -199,15 +139,14 @@ const updateUIWithStatus = (statuses) => {
       }
 
       button.disabled = !isOnline;
+      if (!isOnline) {
+        button.style.backgroundColor = '#6c757d';
+        button.style.cursor = 'not-allowed';
+      }
     }
   }
 };
 
-/*
- Adiciona um event listener para o evento 'DOMContentLoaded'.
- Quando a página é carregada, busca o status das ferramentas no servidor
- e atualiza a interface do usuário.
- */
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('/api/status');
@@ -217,7 +156,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateUIWithStatus(serverToolStatus);
   } catch (error) {
     console.error("Erro ao buscar status das ferramentas:", error);
-    // Em caso de falha, define todas as ferramentas como offline na interface.
     const offlineStatus = {
         'word-count': { status: 'offline' },
         'generate-uuid': { status: 'offline' },
