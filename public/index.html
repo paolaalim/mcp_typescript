@@ -1,115 +1,115 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Servidor MCP</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script>
+<!DOCTYPE html> <!-- Declaração do tipo de documento HTML5 -->
+<html> <!-- Elemento raiz da página HTML -->
+<head> <!-- Seção que contém metadados da página -->
+  <title>Servidor MCP</title> <!-- Título que aparece na aba do navegador -->
+  <meta charset="utf-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Torna a página responsiva em dispositivos móveis -->
+  <link rel="stylesheet" href="style.css"> <!-- Link para o arquivo de estilos CSS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script> <!-- Biblioteca externa para geração de UUIDs -->
 </head>
-<body>
+<body> <!-- Corpo principal da página -->
 
-  <header class="topbar">
-    <div class="topbar-logo">
-      <img src="https://i.postimg.cc/ry9wkJ3N/logomcp.png" alt="Logo" class="logo-img">
-      <span class="logo-text">Teste MCP 2.0</span>
+  <header class="topbar"> <!-- Cabeçalho superior da aplicação -->
+    <div class="topbar-logo"> <!-- Container do logo e título -->
+      <img src="https://i.postimg.cc/ry9wkJ3N/logomcp.png" alt="Logo" class="logo-img"> <!-- Imagem do logo -->
+      <span class="logo-text">Teste MCP 2.0</span> <!-- Texto do título da aplicação -->
     </div>
-    <div class="topbar-right">
-      <div class="search-bar-container">
-        <input type="text" placeholder="Pesquisar" class="search-input">
+    <div class="topbar-right"> <!-- Lado direito do cabeçalho -->
+      <div class="search-bar-container"> <!-- Container da barra de pesquisa -->
+        <input type="text" placeholder="Pesquisar" class="search-input"> <!-- Campo de pesquisa -->
       </div>
-      <div class="user-profile">
-        <span>Ferramentas</span>
-        <div class="user-avatar"></div>
+      <div class="user-profile"> <!-- Seção do perfil do usuário -->
+        <span>Ferramentas</span> <!-- Texto identificando a seção -->
+        <div class="user-avatar"></div> <!-- Avatar do usuário (círculo colorido) -->
       </div>
     </div>
   </header>
 
-  <div class="app-container">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2>Pesquise aqui</h2>
-        <input type="text" placeholder="Pesquisar" class="sidebar-search">
+  <div class="app-container"> <!-- Container principal da aplicação -->
+    <aside class="sidebar"> <!-- Barra lateral de navegação -->
+      <div class="sidebar-header"> <!-- Cabeçalho da barra lateral -->
+        <h2>Pesquise aqui</h2> <!-- Título da seção de pesquisa -->
+        <input type="text" placeholder="Pesquisar" class="sidebar-search"> <!-- Campo de busca na sidebar -->
       </div>
-      <nav class="sidebar-nav">
-        <ul>
-          <li class="nav-item">
-            <span class="nav-icon">🔍</span>
-            <span class="nav-text">Buscar</span>
+      <nav class="sidebar-nav"> <!-- Navegação da barra lateral -->
+        <ul> <!-- Lista não ordenada para os itens de navegação -->
+          <li class="nav-item"> <!-- Item de navegação: Buscar -->
+            <span class="nav-icon">🔍</span> <!-- Ícone de busca -->
+            <span class="nav-text">Buscar</span> <!-- Texto do item de navegação -->
           </li>
-          <li class="nav-item active">
-            <span class="nav-icon">👤</span>
-            <span class="nav-text">Ferramentas</span>
+          <li class="nav-item active"> <!-- Item de navegação ativo: Ferramentas -->
+            <span class="nav-icon">👤</span> <!-- Ícone de usuário -->
+            <span class="nav-text">Ferramentas</span> <!-- Texto do item de navegação -->
           </li>
-          <li class="nav-item">
-            <span class="nav-icon">📄</span>
-            <span class="nav-text">Receber</span>
+          <li class="nav-item"> <!-- Item de navegação: Receber -->
+            <span class="nav-icon">📄</span> <!-- Ícone de documento -->
+            <span class="nav-text">Receber</span> <!-- Texto do item de navegação -->
           </li>
           </ul>
       </nav>
     </aside>
 
-    <main class="main-content">
-      <div class="card-grid">
-        <div class="card" id="card-word-count">
-          <div class="card-header">
-            <h3>Contador de Palavras</h3>
-            <span class="card-status" id="status-badge-word-count"></span>
+    <main class="main-content"> <!-- Área principal de conteúdo -->
+      <div class="card-grid"> <!-- Grid de cards das ferramentas -->
+        <div class="card" id="card-word-count"> <!-- Card da ferramenta Contador de Palavras -->
+          <div class="card-header"> <!-- Cabeçalho do card -->
+            <h3>Contador de Palavras</h3> <!-- Título da ferramenta -->
+            <span class="card-status" id="status-badge-word-count"></span> <!-- Badge de status (online/offline) -->
           </div>
-          <div class="card-body">
-            <p><strong>Status:</strong> <span id="status-text-word-count"></span></p>
-            <div class="input-group">
-              <label for="textInput">Digite seu texto:</label>
-              <textarea id="textInput" placeholder="Olá digite as palavras aqui!"></textarea>
+          <div class="card-body"> <!-- Corpo do card com conteúdo -->
+            <p><strong>Status:</strong> <span id="status-text-word-count"></span></p> <!-- Status textual da ferramenta -->
+            <div class="input-group"> <!-- Grupo de input para texto -->
+              <label for="textInput">Digite seu texto:</label> <!-- Rótulo do campo de texto -->
+              <textarea id="textInput" placeholder="Olá digite as palavras aqui!"></textarea> <!-- Campo para inserir texto -->
             </div>
-            <button onclick="countWords()">Contar Palavras</button>
-            <div id="wordCountResult" class="result-box">Resultado</div>
+            <button onclick="countWords()">Contar Palavras</button> <!-- Botão para executar a contagem -->
+            <div id="wordCountResult" class="result-box">Resultado</div> <!-- Área para exibir o resultado -->
           </div>
         </div>
 
-        <div class="card" id="card-generate-uuid">
-          <div class="card-header">
-            <h3>Gerador de UUID</h3>
-            <span class="card-status" id="status-badge-generate-uuid"></span>
+        <div class="card" id="card-generate-uuid"> <!-- Card da ferramenta Gerador de UUID -->
+          <div class="card-header"> <!-- Cabeçalho do card -->
+            <h3>Gerador de UUID</h3> <!-- Título da ferramenta -->
+            <span class="card-status" id="status-badge-generate-uuid"></span> <!-- Badge de status (online/offline) -->
           </div>
-          <div class="card-body">
-            <p><strong>Status:</strong> <span id="status-text-generate-uuid"></span></p>
-            <div class="input-group">
-              <label for="uuidCount">Quantidade de UUIDs (padrão 1):</label>
-              <input type="number" id="uuidCount" value="1" min="1">
+          <div class="card-body"> <!-- Corpo do card com conteúdo -->
+            <p><strong>Status:</strong> <span id="status-text-generate-uuid"></span></p> <!-- Status textual da ferramenta -->
+            <div class="input-group"> <!-- Grupo de input para quantidade -->
+              <label for="uuidCount">Quantidade de UUIDs (padrão 1):</label> <!-- Rótulo do campo numérico -->
+              <input type="number" id="uuidCount" value="1" min="1"> <!-- Campo para definir quantidade de UUIDs -->
             </div>
-            <div class="input-group">
-              <label for="uuidFormat">Formato:</label>
-              <select id="uuidFormat">
-                <option value="formatted">Com hífens</option>
-                <option value="raw">Sem hífens</option>
+            <div class="input-group"> <!-- Grupo de input para formato -->
+              <label for="uuidFormat">Formato:</label> <!-- Rótulo do seletor de formato -->
+              <select id="uuidFormat"> <!-- Dropdown para escolher formato -->
+                <option value="formatted">Com hífens</option> <!-- Opção: UUID com hífens -->
+                <option value="raw">Sem hífens</option> <!-- Opção: UUID sem hífens -->
               </select>
             </div>
-            <button onclick="generateUUIDs()">Gerar UUIDs</button>
-            <div id="uuidResult" class="result-box">Os UUIDs gerados aparecerão aqui...</div>
+            <button onclick="generateUUIDs()">Gerar UUIDs</button> <!-- Botão para gerar UUIDs -->
+            <div id="uuidResult" class="result-box">Os UUIDs gerados aparecerão aqui...</div> <!-- Área para exibir UUIDs gerados -->
           </div>
         </div>
 
-        <div class="card" id="card-ai-tool">
-          <div class="card-header">
-            <h3>Ferramenta de IA (Claude)</h3>
-            <span class="card-status" id="status-badge-ai-tool"></span>
+        <div class="card" id="card-ai-tool"> <!-- Card da ferramenta de IA (Claude) -->
+          <div class="card-header"> <!-- Cabeçalho do card -->
+            <h3>Ferramenta de IA (Claude)</h3> <!-- Título da ferramenta -->
+            <span class="card-status" id="status-badge-ai-tool"></span> <!-- Badge de status (online/offline) -->
           </div>
-          <div class="card-body">
-            <p><strong>Status:</strong> <span id="status-text-ai-tool"></span></p>
-            <div class="input-group">
-              <label for="aiPrompt">Digite seu prompt:</label>
-              <textarea id="aiPrompt" placeholder="Ex: Crie um poema sobre tecnologia."></textarea>
+          <div class="card-body"> <!-- Corpo do card com conteúdo -->
+            <p><strong>Status:</strong> <span id="status-text-ai-tool"></span></p> <!-- Status textual da ferramenta -->
+            <div class="input-group"> <!-- Grupo de input para prompt -->
+              <label for="aiPrompt">Digite seu prompt:</label> <!-- Rótulo do campo de prompt -->
+              <textarea id="aiPrompt" placeholder="Ex: Crie um poema sobre tecnologia."></textarea> <!-- Campo para inserir prompt da IA -->
             </div>
-            <button onclick="sendAIPrompt()">Enviar para IA</button>
-            <div id="aiResult" class="result-box">A resposta da IA aparecerá aqui.</div>
+            <button onclick="sendAIPrompt()">Enviar para IA</button> <!-- Botão para enviar prompt -->
+            <div id="aiResult" class="result-box">A resposta da IA aparecerá aqui.</div> <!-- Área para exibir resposta da IA -->
           </div>
         </div>
-      </div>
-    </main>
-  </div>
+      </div> <!-- Fim do grid de cards -->
+    </main> <!-- Fim do conteúdo principal -->
+  </div> <!-- Fim do container da aplicação -->
 
-  <script src="script.js" defer></script>
+  <script src="script.js" defer></script> <!-- Carrega o arquivo JavaScript após o HTML -->
 
-</body>
-</html>
+</body> <!-- Fim do corpo da página -->
+</html> <!-- Fim do documento HTML -->

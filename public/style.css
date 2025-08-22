@@ -1,7 +1,8 @@
+/* Definição de variáveis CSS customizadas (CSS Custom Properties) para cores reutilizáveis */
 :root {
-  --primary-color: #28a745; /* Verde vibrante */
+  --primary-color: #28a745; /* Verde vibrante - cor principal da aplicação */
   --secondary-color: #6c757d; /* Cinza para textos secundários */
-  --bg-color: #f8f9fa; /* Fundo branco/cinza claro */
+  --bg-color: #f8f9fa; /* Fundo branco/cinza claro para o corpo da página */
   --card-bg-color: #ffffff; /* Fundo de cards branco */
   --border-color: #dee2e6; /* Cor de borda cinza claro */
   --text-color: #343a40; /* Cor de texto escuro */
@@ -9,209 +10,244 @@
   --header-bg-color: #216a3a; /* Verde mais escuro para o topo */
 }
 
+/* Estilos globais para o elemento body */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  margin: 0;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Pilha de fontes modernas */
+  margin: 0; /* Remove margens padrão do navegador */
+  background-color: var(--bg-color); /* Aplica cor de fundo usando variável CSS */
+  color: var(--text-color); /* Define cor do texto principal */
+  min-height: 100vh; /* Altura mínima de 100% da viewport */
+  display: flex; /* Layout flexbox */
+  flex-direction: column; /* Direção vertical dos elementos filhos */
 }
 
+/* Estilos para a barra superior (header) */
 .topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: var(--header-bg-color); 
-  border-bottom: 1px solid var(--header-bg-color);
-  color: white;
+  display: flex; /* Layout flexbox */
+  justify-content: space-between; /* Espaça elementos nas extremidades */
+  align-items: center; /* Alinha verticalmente ao centro */
+  padding: 10px 20px; /* Padding interno: 10px vertical, 20px horizontal */
+  background-color: var(--header-bg-color); /* Cor de fundo usando variável */
+  border-bottom: 1px solid var(--header-bg-color); /* Borda inferior */
+  color: white; /* Cor do texto branca */
 }
+/* Container do logo e texto no header */
 .topbar-logo {
-  display: flex;
-  align-items: center;
+  display: flex; /* Layout flexbox */
+  align-items: center; /* Alinha verticalmente ao centro */
 }
+/* Estilos para a imagem do logo */
 .logo-img {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
+  width: 30px; /* Largura fixa */
+  height: 30px; /* Altura fixa */
+  margin-right: 10px; /* Margem direita para separar do texto */
 }
+/* Estilos para o texto do logo */
 .logo-text {
-  font-weight: bold;
-  color: white; 
+  font-weight: bold; /* Texto em negrito */
+  color: white; /* Cor branca */
 }
+/* Container do lado direito do header */
 .topbar-right {
-  display: flex;
-  align-items: center;
+  display: flex; /* Layout flexbox */
+  align-items: center; /* Alinha verticalmente ao centro */
 }
+/* Container da barra de pesquisa */
 .search-bar-container {
-  position: relative;
-  margin-right: 20px;
+  position: relative; /* Posicionamento relativo para elementos filhos */
+  margin-right: 20px; /* Margem direita */
 }
+/* Estilos do input de pesquisa */
 .search-input {
-  width: 300px;
-  padding: 8px 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
+  width: 300px; /* Largura fixa */
+  padding: 8px 8px; /* Padding interno */
+  border: 1px solid var(--border-color); /* Borda usando variável CSS */
+  border-radius: 5px; /* Bordas arredondadas */
 }
+/* Container do perfil do usuário */
 .user-profile {
-  display: flex;
-  align-items: center;
-  color: white;
+  display: flex; /* Layout flexbox */
+  align-items: center; /* Alinha verticalmente ao centro */
+  color: white; /* Cor do texto branca */
 }
+/* Avatar do usuário (círculo colorido) */
 .user-avatar {
-  width: 35px;
-  height: 35px;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-  font-weight: bold;
+  width: 35px; /* Largura fixa */
+  height: 35px; /* Altura fixa */
+  background-color: var(--primary-color); /* Cor de fundo usando variável */
+  color: white; /* Cor do texto */
+  border-radius: 50%; /* Forma circular (50% = círculo perfeito) */
+  display: flex; /* Layout flexbox */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  margin-left: 10px; /* Margem esquerda */
+  font-weight: bold; /* Texto em negrito */
 }
 
+/* Container principal da aplicação */
 .app-container {
-  display: flex;
-  flex: 1;
+  display: flex; /* Layout flexbox horizontal */
+  flex: 1; /* Ocupa todo o espaço vertical disponível */
 }
 
+/* Estilos para a barra lateral (sidebar) */
 .sidebar {
-  width: 250px;
-  background-color: var(--header-bg-color);
-  border-right: 1px solid var(--border-color);
-  padding: 20px;
-  flex-shrink: 0;
+  width: 250px; /* Largura fixa */
+  background-color: var(--header-bg-color); /* Cor de fundo usando variável */
+  border-right: 1px solid var(--border-color); /* Borda direita */
+  padding: 20px; /* Padding interno */
+  flex-shrink: 0; /* Impede que a sidebar encolha */
 }
+/* Cabeçalho da sidebar */
 .sidebar-header h2 {
-  font-size: 1.2em;
-  margin-bottom: 15px;
-  color: #ffffff;
+  font-size: 1.2em; /* Tamanho da fonte */
+  margin-bottom: 15px; /* Margem inferior */
+  color: #ffffff; /* Cor branca */
 }
+/* Campo de pesquisa na sidebar */
 .sidebar-search {
-  width: 90%;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  margin-bottom: 20px;
+  width: 90%; /* Largura de 90% do container pai */
+  padding: 8px 12px; /* Padding interno */
+  border: 1px solid var(--border-color); /* Borda usando variável */
+  border-radius: 5px; /* Bordas arredondadas */
+  margin-bottom: 20px; /* Margem inferior */
 }
+/* Lista de navegação na sidebar */
 .sidebar-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: none; /* Remove bullets da lista */
+  padding: 0; /* Remove padding padrão */
+  margin: 0; /* Remove margem padrão */
 }
+/* Itens individuais de navegação */
 .nav-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.2s;
-  color: #ffffff;
+  display: flex; /* Layout flexbox */
+  align-items: center; /* Alinha verticalmente ao centro */
+  padding: 12px 15px; /* Padding interno */
+  cursor: pointer; /* Cursor de pointer ao passar o mouse */
+  border-radius: 5px; /* Bordas arredondadas */
+  transition: background-color 0.2s; /* Transição suave na cor de fundo */
+  color: #ffffff; /* Cor do texto branca */
 }
+/* Estados hover e ativo dos itens de navegação */
 .nav-item:hover, .nav-item.active {
-  background-color: #28a745;
+  background-color: #28a745; /* Cor de fundo verde ao passar mouse ou quando ativo */
 }
+/* Ícones dos itens de navegação */
 .nav-icon {
-  margin-right: 10px;
+  margin-right: 10px; /* Margem direita para separar do texto */
 }
 
+/* Área principal de conteúdo */
 .main-content {
-  flex-grow: 1;
-  padding: 20px;
+  flex-grow: 1; /* Ocupa todo o espaço horizontal restante */
+  padding: 20px; /* Padding interno */
 }
+/* Grid de cards das ferramentas */
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: grid; /* Layout CSS Grid */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas responsivas: mínimo 300px, se ajustam automaticamente */
+  gap: 20px; /* Espaço entre os cards */
 }
+/* Estilos individuais dos cards */
 .card {
-  background-color: var(--card-bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background-color: var(--card-bg-color); /* Cor de fundo usando variável */
+  border: 1px solid var(--border-color); /* Borda usando variável */
+  border-radius: 8px; /* Bordas arredondadas */
+  padding: 20px; /* Padding interno */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sombra sutil para profundidade */
 }
+/* Cabeçalho dos cards */
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  display: flex; /* Layout flexbox */
+  justify-content: space-between; /* Espaça título e status nas extremidades */
+  align-items: center; /* Alinha verticalmente ao centro */
+  border-bottom: 1px solid var(--border-color); /* Borda inferior */
+  padding-bottom: 10px; /* Padding inferior */
+  margin-bottom: 10px; /* Margem inferior */
 }
+/* Título dos cards */
 .card-header h3 {
-  margin: 0;
-  font-size: 1.1em;
+  margin: 0; /* Remove margem padrão */
+  font-size: 1.1em; /* Tamanho da fonte */
 }
+/* Badge de status dos cards */
 .card-status {
-  font-size: 0.8em;
-  padding: 4px 8px;
-  border-radius: 5px;
+  font-size: 0.8em; /* Fonte menor */
+  padding: 4px 8px; /* Padding interno */
+  border-radius: 5px; /* Bordas arredondadas */
 }
+/* Status online - fundo verde */
 .status-online {
-  color: white;
-  background-color: var(--online-color);
+  color: white; /* Texto branco */
+  background-color: var(--online-color); /* Fundo verde usando variável */
 }
 
+/* Status offline - sem fundo, apenas borda */
 .status-offline {
-  color: var(--secondary-color); 
-  background-color: transparent; 
-  border: 1px solid var(--border-color); 
+  color: var(--secondary-color); /* Texto cinza */
+  background-color: transparent; /* Fundo transparente */
+  border: 1px solid var(--border-color); /* Borda cinza */
 }
 
+/* Corpo dos cards */
 .card-body p {
-  font-size: 0.9em;
-  color: var(--secondary-color);
+  font-size: 0.9em; /* Fonte um pouco menor */
+  color: var(--secondary-color); /* Cor secundária (cinza) */
 }
+/* Labels dos grupos de input */
 .input-group label {
-  color: var(--text-color);
+  color: var(--text-color); /* Cor do texto principal */
 }
+/* Caixa de resultados */
 .result-box {
-  background-color: #f1f3f5;
-  border: 1px solid #e9ecef;
-  border-radius: 5px;
-  padding: 15px;
-  margin-top: 15px;
-  text-align: left;
-  font-family: monospace;
-  font-size: 0.9em;
-  max-height: 200px;
-  overflow-y: auto;
+  background-color: #f1f3f5; /* Fundo cinza claro */
+  border: 1px solid #e9ecef; /* Borda cinza */
+  border-radius: 5px; /* Bordas arredondadas */
+  padding: 15px; /* Padding interno */
+  margin-top: 15px; /* Margem superior */
+  text-align: left; /* Alinhamento do texto à esquerda */
+  font-family: monospace; /* Fonte monoespaçada para melhor legibilidade de códigos */
+  font-size: 0.9em; /* Fonte menor */
+  max-height: 200px; /* Altura máxima */
+  overflow-y: auto; /* Scroll vertical quando necessário */
 }
+/* Títulos dentro da caixa de resultados */
 .result-box h4 {
-  margin-top: 0;
-  font-size: 1em;
+  margin-top: 0; /* Remove margem superior */
+  font-size: 1em; /* Tamanho padrão da fonte */
 }
+/* Listas dentro da caixa de resultados */
 .result-box ul {
-  list-style: none;
-  padding-left: 0;
+  list-style: none; /* Remove bullets da lista */
+  padding-left: 0; /* Remove padding esquerdo */
 }
+/* Itens de lista dentro da caixa de resultados */
 .result-box li {
-  margin-bottom: 5px;
+  margin-bottom: 5px; /* Margem inferior entre itens */
 }
+/* Estilos globais para botões */
 button {
-  width: 100%;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s;
+  width: 100%; /* Largura completa do container pai */
+  background-color: var(--primary-color); /* Cor de fundo verde */
+  color: white; /* Cor do texto branca */
+  border: none; /* Remove borda padrão */
+  padding: 10px; /* Padding interno */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de pointer */
+  margin-top: 10px; /* Margem superior */
+  transition: background-color 0.2s; /* Transição suave na cor de fundo */
 }
+/* Estado hover dos botões */
 button:hover {
-  background-color: #218838;
+  background-color: #218838; /* Verde mais escuro ao passar o mouse */
 }
 
+/* Estados desabilitados dos botões */
 button:disabled {
-  background-color: var(--secondary-color);
-  cursor: not-allowed;
+  background-color: var(--secondary-color); /* Fundo cinza quando desabilitado */
+  cursor: not-allowed; /* Cursor de "não permitido" */
 }
 
 button:disabled:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-color); /* Mantém cor cinza mesmo no hover quando desabilitado */
 }
