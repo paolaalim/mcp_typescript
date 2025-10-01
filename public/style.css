@@ -145,7 +145,7 @@ body {
 /* Grid de cards das ferramentas */
 .card-grid {
   display: grid; /* Layout CSS Grid */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas responsivas: mínimo 300px, se ajustam automaticamente */
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Colunas responsivas */
   gap: 20px; /* Espaço entre os cards */
 }
 /* Estilos individuais dos cards */
@@ -189,7 +189,7 @@ body {
   border: 1px solid var(--border-color); /* Borda cinza */
 }
 
-/* Corpo dos cards */
+
 .card-body p {
   font-size: 0.9em; /* Fonte um pouco menor */
   color: var(--secondary-color); /* Cor secundária (cinza) */
@@ -207,8 +207,6 @@ body {
   margin-top: 15px; /* Margem superior */
   text-align: left; /* Alinhamento do texto à esquerda */
   font-family: monospace; /* Fonte monoespaçada para melhor legibilidade de códigos */
-  font-size: 0.9em; /* Fonte menor */
-  max-height: 200px; /* Altura máxima */
   overflow-y: auto; /* Scroll vertical quando necessário */
 }
 /* Títulos dentro da caixa de resultados */
