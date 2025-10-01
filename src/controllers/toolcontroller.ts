@@ -56,6 +56,7 @@ export const handleGenerateUuid = (req: Request, res: Response) => {
 };
 
 // Handler assíncrono para a ferramenta de IA (Google Gemini)
+// Handler assíncrono para a ferramenta de IA (Google Gemini)
 export const handleAiTool = async (req: Request, res: Response) => {
   const result = aiToolSchema.safeParse(req.body);
   if (!result.success) {
@@ -72,7 +73,7 @@ export const handleAiTool = async (req: Request, res: Response) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Corpo da requisição no formato esperado pelo Gemini
+      // Corpo da requisição no formato esperado pela API v1
       body: JSON.stringify({
         contents: [{
           parts: [{
