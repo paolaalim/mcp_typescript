@@ -11,7 +11,7 @@ Atualmente, o servidor oferece as seguintes ferramentas:
 
 1. **Contador de Palavras** → Analisa um texto e retorna a frequência de cada palavra.  
 2. **Gerador de UUID** → Gera identificadores únicos universalmente (UUID v4).  
-3. **Ferramenta de IA (Claude)** → Integra-se à API do Claude da Anthropic para responder a prompts de texto.  
+3. **Ferramenta de IA (Gemini)** → Integra-se à API do Gemini para responder a prompts de texto.  
 
 ---
 
@@ -121,6 +121,3 @@ Toda contribuição é bem-vinda! 🚀
 Este projeto é licenciado sob a **Licença MIT**.
 Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-
-Quer que eu adicione uns **badges (Node.js, TypeScript, Docker, MIT License)** no topo também, pra dar aquele charme de projeto GitHub?
-```
