@@ -23,8 +23,8 @@ const showResult = (elementId, data) => {
             resultDiv.innerHTML = html;
         }
         else if (elementId === 'aiResult') {
-            // Formatação específica para resultados da IA
-            const aiResponse = data.ai_response && data.ai_response.content ? data.ai_response.content[0].text : 'Nenhuma resposta válida.';
+            // ALTERAÇÃO AQUI: Simplificamos como a resposta da IA é lida
+            const aiResponse = data.ai_response || 'Nenhuma resposta válida.';
             resultDiv.innerHTML = `<h4>Resposta da IA:</h4><p>${aiResponse}</p>`;
         }
         else {
@@ -41,7 +41,6 @@ const showResult = (elementId, data) => {
         }
     }
 };
-
 // Função assíncrona para contar palavras
 const countWords = async () => {
   // Verifica se a ferramenta está online antes de prosseguir
